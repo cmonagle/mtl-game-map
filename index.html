@@ -200,6 +200,18 @@
     }
     .legend-row { display: flex; align-items: center; gap: 6px; }
     .legend-swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    #excl-info {
+      display: none; margin-top: 6px; padding-top: 6px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      font-size: 12px; color: #f88;
+    }
+    #excl-info button {
+      margin-left: 6px; background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2); color: #fff;
+      border-radius: 6px; padding: 3px 8px; font-size: 11px;
+      cursor: pointer; font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
     #station-count {
       margin-top: 6px; padding-top: 6px;
       border-top: 1px solid rgba(255,255,255,0.12);
@@ -240,6 +252,7 @@
   <div id="legend">
     <div class="legend-row"><span class="legend-swatch" style="background: #0078D4;"></span> Metro</div>
     <div class="legend-row"><span class="legend-swatch" style="background: #00A86B;"></span> REM</div>
+    <div id="excl-info"></div>
     <div id="station-count"></div>
   </div>
 
@@ -280,31 +293,41 @@
     const ZONE_B_COLOR = '#F5A623';
     const EXCLUDED_COLOR = '#555';
     const STORAGE_KEY = 'jetlag-filters';
+    const EXCL_KEY = 'jetlag-excluded';
     const MILES_TO_KM = 1.60934;
 
     let filters = [];
+    let excluded = new Set();   // manually removed stations, keyed by name|system
     let drawState = null;
     let stationData = null;
     let zoneData = null;
     let previewMode = false;
     let undoStack = [];
 
+    // A station may share a name across systems (e.g. McGill Metro/REM), so key by both.
+    function stationKey(props) { return props.name + '|' + props.system; }
+
     function loadFilters() {
-      // Check for shared filters in URL
+      // Check for shared state in URL (filters and/or removed stations)
       const params = new URLSearchParams(window.location.search);
-      const shared = params.get('f');
-      if (shared) {
-        try {
-          filters = JSON.parse(decodeURIComponent(shared));
-          previewMode = true;
-          return;
-        } catch {}
+      const sharedF = params.get('f');
+      const sharedX = params.get('x');
+      if (sharedF || sharedX) {
+        previewMode = true;
+        try { filters = sharedF ? JSON.parse(decodeURIComponent(sharedF)) : []; } catch { filters = []; }
+        try { excluded = new Set(sharedX ? JSON.parse(decodeURIComponent(sharedX)) : []); } catch { excluded = new Set(); }
+        return;
       }
       try { filters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { filters = []; }
+      try { excluded = new Set(JSON.parse(localStorage.getItem(EXCL_KEY)) || []); } catch { excluded = new Set(); }
     }
     function saveFilters() {
       if (previewMode) return; // don't save preview state to localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
+    }
+    function saveExcluded() {
+      if (previewMode) return;
+      localStorage.setItem(EXCL_KEY, JSON.stringify([...excluded]));
     }
 
     // --- Undo ---
@@ -330,7 +353,8 @@
 
     function shareFilters() {
       const data = encodeURIComponent(JSON.stringify(filters));
-      const url = `${window.location.origin}${window.location.pathname}?f=${data}`;
+      let url = `${window.location.origin}${window.location.pathname}?f=${data}`;
+      if (excluded.size) url += `&x=${encodeURIComponent(JSON.stringify([...excluded]))}`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(() => {
           const btn = document.getElementById('share-btn');
@@ -347,6 +371,7 @@
       // Clear the query param
       window.history.replaceState({}, '', window.location.pathname);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
+      localStorage.setItem(EXCL_KEY, JSON.stringify([...excluded]));
       updatePreviewBar();
     }
 
@@ -354,9 +379,11 @@
       previewMode = false;
       window.history.replaceState({}, '', window.location.pathname);
       try { filters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { filters = []; }
+      try { excluded = new Set(JSON.parse(localStorage.getItem(EXCL_KEY)) || []); } catch { excluded = new Set(); }
       updatePreviewBar();
       applyFilters();
       renderFilterList();
+      updateExclInfo();
     }
 
     function updatePreviewBar() {
@@ -618,18 +645,33 @@
       map.addLayer({ id: 'draw-preview-line', type: 'line', source: 'draw-preview',
         paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-opacity': 0.5 } });
 
-      // Station click (popup)
+      // Station click (popup) — shows status and a Remove/Restore toggle
       for (const layerId of ['station-allowed-circles', 'station-excluded-circles']) {
         map.on('click', layerId, (e) => {
           if (drawState) return;
           const props = e.features[0].properties;
           const coords = e.features[0].geometry.coordinates;
+          const key = stationKey(props);
           const allowed = layerId.includes('allowed');
-          new maplibregl.Popup({ offset: 14 })
+          const isExcl = excluded.has(key);
+          const status = allowed ? 'Allowed' : (isExcl ? 'Removed' : 'Excluded by filter');
+          const statusColor = allowed ? '#4ade80' : (isExcl ? '#f88' : '#888');
+          const btnStyle = `margin-top:8px;width:100%;padding:7px 10px;border-radius:6px;cursor:pointer;`
+            + `font-family:inherit;font-size:13px;border:1px solid rgba(255,255,255,0.2);`
+            + (isExcl ? `background:rgba(255,255,255,0.1);color:#fff;` : `background:rgba(255,80,80,0.15);color:#f88;`);
+          const popup = new maplibregl.Popup({ offset: 14 })
             .setLngLat(coords)
             .setHTML(`<strong>${props.name}</strong><br>${props.system} &middot; Zone ${props.zone}<br>
-              <span style="color:${allowed ? '#4ade80' : '#888'}">${allowed ? 'Allowed' : 'Excluded'}</span>`)
+              <span style="color:${statusColor}">${status}</span>
+              <button class="popup-excl-btn" style="${btnStyle}">${isExcl ? 'Restore station' : 'Remove station'}</button>`)
             .addTo(map);
+          const btn = popup.getElement().querySelector('.popup-excl-btn');
+          if (btn) btn.addEventListener('click', () => {
+            if (excluded.has(key)) excluded.delete(key); else excluded.add(key);
+            saveExcluded();
+            applyFilters();
+            popup.remove();
+          });
         });
         map.on('mouseenter', layerId, () => { if (!drawState) map.getCanvas().style.cursor = 'pointer'; });
         map.on('mouseleave', layerId, () => { if (!drawState) map.getCanvas().style.cursor = ''; });
@@ -754,22 +796,24 @@
     function applyFilters() {
       if (!stationData || !zoneData) return;
       const hasActive = filters.some(f => f.enabled);
+      const anyConstraint = hasActive || excluded.size > 0;
 
       const allowedS = [], excludedS = [];
       for (const f of stationData.features) {
-        ((!hasActive || stationAllowed(f.geometry.coordinates)) ? allowedS : excludedS).push(f);
+        const ok = (!hasActive || stationAllowed(f.geometry.coordinates)) && !excluded.has(stationKey(f.properties));
+        (ok ? allowedS : excludedS).push(f);
       }
       map.getSource('stations-allowed').setData({ type: 'FeatureCollection', features: allowedS });
       map.getSource('stations-excluded').setData({ type: 'FeatureCollection', features: excludedS });
       updateStationCount(allowedS, hasActive);
 
-      if (hasActive) {
+      if (anyConstraint) {
         const allowedZ = [], excludedZ = [];
         for (const f of zoneData.features) {
           const name = f.properties.name;
           const sys = f.properties.system;
           const st = stationData.features.find(s => s.properties.name === name && s.properties.system === sys);
-          const stAllowed = st && stationAllowed(st.geometry.coordinates);
+          const stAllowed = st && (!hasActive || stationAllowed(st.geometry.coordinates)) && !excluded.has(stationKey(f.properties));
 
           if (!stAllowed) { excludedZ.push(f); continue; }
 
@@ -790,6 +834,7 @@
       }
 
       updateFilterVis();
+      updateExclInfo();
     }
 
     // Live "stations remaining" readout in the legend. Lists survivors once few remain.
@@ -1023,6 +1068,28 @@
     }
 
     function esc(s) { return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+    // --- Removed stations (manual exclusion) ---
+    function updateExclInfo() {
+      const el = document.getElementById('excl-info');
+      if (!el) return;
+      if (excluded.size) {
+        el.innerHTML = `${excluded.size} station${excluded.size === 1 ? '' : 's'} removed`
+          + `<button id="excl-restore">Restore all</button>`;
+        el.style.display = 'block';
+      } else {
+        el.innerHTML = '';
+        el.style.display = 'none';
+      }
+    }
+    function clearExcluded() {
+      excluded.clear();
+      saveExcluded();
+      applyFilters();
+    }
+    document.getElementById('excl-info').addEventListener('click', (e) => {
+      if (e.target.id === 'excl-restore') clearExcluded();
+    });
   </script>
 </body>
 </html>
