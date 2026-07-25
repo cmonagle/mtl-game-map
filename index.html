@@ -378,12 +378,18 @@
       return Math.sign((p2[0] - p1[0]) * (p[1] - p1[1]) - (p2[1] - p1[1]) * (p[0] - p1[0]));
     }
 
-    // Returns [midpoint, midpoint+perp] defining the perpendicular bisector
+    // Returns [midpoint, midpoint+perp] defining the perpendicular bisector.
+    // The perpendicular is built in a locally metric space (longitude scaled by
+    // cos(latitude)) and converted back to degrees, so the line is truly perpendicular
+    // on the ground. Computing it in raw lng/lat treats the map as an isotropic grid,
+    // which tilts diagonal bisectors ~20° off at Montreal's latitude and misplaces the
+    // Measuring / Thermometer boundary by up to ~0.6 mi.
     function perpBisector(p1, p2) {
       const mx = (p1[0] + p2[0]) / 2, my = (p1[1] + p2[1]) / 2;
-      const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
-      // Perpendicular direction: [-dy, dx]
-      return [[mx, my], [mx - dy, my + dx]];
+      const cosLat = Math.cos(my * Math.PI / 180) || 1e-6;
+      const dxm = (p2[0] - p1[0]) * cosLat, dym = (p2[1] - p1[1]); // metric-space delta
+      // Perpendicular in metric space is [-dym, dxm]; convert the lng component back.
+      return [[mx, my], [mx - dym / cosLat, my + dxm]];
     }
 
     // Get the effective line endpoints for a line filter (original or perpendicular bisector)
