@@ -58,16 +58,19 @@
       -webkit-tap-highlight-color: transparent;
     }
     #add-btn:hover, #add-btn:active { background: rgba(255,255,255,0.18); }
-    #share-btn {
+    #share-btn, #undo-btn, #more-btn {
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.15);
       color: #fff;
       min-width: 44px; min-height: 44px;
-      border-radius: 10px; cursor: pointer;
+      border-radius: 10px; cursor: pointer; font-size: 16px;
       display: flex; align-items: center; justify-content: center;
       -webkit-tap-highlight-color: transparent;
     }
-    #share-btn:hover, #share-btn:active { background: rgba(255,255,255,0.18); }
+    #share-btn:hover, #share-btn:active,
+    #undo-btn:hover, #undo-btn:active,
+    #more-btn:hover, #more-btn:active { background: rgba(255,255,255,0.18); }
+    #undo-btn:disabled { opacity: 0.35; cursor: default; }
     #preview-bar {
       display: none;
       padding: 10px 16px;
@@ -88,19 +91,20 @@
     }
     #preview-bar button:active { background: rgba(255,255,255,0.2); }
 
-    #add-menu { display: none; padding: 0 12px 8px; }
-    #add-menu.open { display: block; }
-    .add-option {
+    #add-menu, #more-menu { display: none; padding: 0 12px 8px; }
+    #add-menu.open, #more-menu.open { display: block; }
+    .add-option, .menu-option {
       display: block; width: 100%;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 10px; color: #e0e0e0;
       padding: 14px 16px; margin-bottom: 6px;
       cursor: pointer; text-align: left; font-size: 14px;
+      font-family: inherit;
       -webkit-tap-highlight-color: transparent;
     }
-    .add-option:active { background: rgba(255,255,255,0.12); }
-    .add-option:last-child { margin-bottom: 0; }
+    .add-option:active, .menu-option:active { background: rgba(255,255,255,0.12); }
+    .add-option:last-child, .menu-option:last-child { margin-bottom: 0; }
 
     #filter-list { padding: 0 12px 20px; }
     .filter-card {
@@ -192,6 +196,7 @@
       padding: 10px 14px; border-radius: 10px;
       font-size: 12px; line-height: 1.7;
       z-index: 10; backdrop-filter: blur(8px);
+      max-width: 220px;
     }
     .legend-row { display: flex; align-items: center; gap: 6px; }
     .legend-swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
@@ -206,6 +211,16 @@
       border-radius: 6px; padding: 3px 8px; font-size: 11px;
       cursor: pointer; font-family: inherit;
       -webkit-tap-highlight-color: transparent;
+    }
+    #station-count {
+      margin-top: 6px; padding-top: 6px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      line-height: 1.5;
+    }
+    #station-count strong { color: #fff; font-size: 13px; }
+    #station-count .sc-list {
+      margin-top: 4px; color: #9cf; font-size: 11px; line-height: 1.5;
+      max-height: 40vh; overflow-y: auto;
     }
 
     .maplibregl-popup-content {
@@ -238,6 +253,7 @@
     <div class="legend-row"><span class="legend-swatch" style="background: #0078D4;"></span> Metro</div>
     <div class="legend-row"><span class="legend-swatch" style="background: #00A86B;"></span> REM</div>
     <div id="excl-info"></div>
+    <div id="station-count"></div>
   </div>
 
   <div id="panel">
@@ -245,7 +261,9 @@
     <div id="panel-header">
       <h2>Clue Filters</h2>
       <div style="display:flex;gap:6px">
-        <button id="share-btn" title="Share" style="font-size:16px">&#128279;</button>
+        <button id="undo-btn" title="Undo" disabled>&#8630;</button>
+        <button id="more-btn" title="More">&#8943;</button>
+        <button id="share-btn" title="Share">&#128279;</button>
         <button id="add-btn" title="Add filter">+</button>
       </div>
     </div>
@@ -254,6 +272,16 @@
       <button class="add-option" data-type="line">Line -- include/exclude one side</button>
       <button class="add-option" data-type="radius">Radius -- include/exclude circle</button>
       <button class="add-option" data-type="polygon">Polygon -- include/exclude area</button>
+    </div>
+    <div id="more-menu">
+      <button class="menu-option" id="clear-btn" style="color:#f88">Clear all filters</button>
+      <div id="clear-confirm" style="display:none">
+        <div style="font-size:13px;color:#e0e0e0;padding:8px 4px 10px">Clear all filters and saved data on this device? This can be undone until you reload.</div>
+        <div style="display:flex;gap:6px">
+          <button class="menu-option" id="clear-yes" style="color:#f88;margin:0;flex:1;text-align:center">Clear everything</button>
+          <button class="menu-option" id="clear-no" style="margin:0;flex:1;text-align:center">Cancel</button>
+        </div>
+      </div>
     </div>
     <div id="filter-list"></div>
   </div>
@@ -274,6 +302,7 @@
     let stationData = null;
     let zoneData = null;
     let previewMode = false;
+    let undoStack = [];
 
     // A station may share a name across systems (e.g. McGill Metro/REM), so key by both.
     function stationKey(props) { return props.name + '|' + props.system; }
@@ -299,6 +328,27 @@
     function saveExcluded() {
       if (previewMode) return;
       localStorage.setItem(EXCL_KEY, JSON.stringify([...excluded]));
+    }
+
+    // --- Undo ---
+    // Snapshot the current filters BEFORE a mutation; undo restores the last snapshot.
+    function pushUndo() {
+      undoStack.push(JSON.stringify(filters));
+      if (undoStack.length > 50) undoStack.shift();
+      updateUndoBtn();
+    }
+    function undo() {
+      if (!undoStack.length) return;
+      if (drawState) endDraw();
+      try { filters = JSON.parse(undoStack.pop()); } catch { filters = []; }
+      saveFilters();
+      applyFilters();
+      renderFilterList();
+      updateUndoBtn();
+    }
+    function updateUndoBtn() {
+      const b = document.getElementById('undo-btn');
+      if (b) b.disabled = undoStack.length === 0;
     }
 
     function shareFilters() {
@@ -405,12 +455,18 @@
       return Math.sign((p2[0] - p1[0]) * (p[1] - p1[1]) - (p2[1] - p1[1]) * (p[0] - p1[0]));
     }
 
-    // Returns [midpoint, midpoint+perp] defining the perpendicular bisector
+    // Returns [midpoint, midpoint+perp] defining the perpendicular bisector.
+    // The perpendicular is built in a locally metric space (longitude scaled by
+    // cos(latitude)) and converted back to degrees, so the line is truly perpendicular
+    // on the ground. Computing it in raw lng/lat treats the map as an isotropic grid,
+    // which tilts diagonal bisectors ~20° off at Montreal's latitude and misplaces the
+    // Measuring / Thermometer boundary by up to ~0.6 mi.
     function perpBisector(p1, p2) {
       const mx = (p1[0] + p2[0]) / 2, my = (p1[1] + p2[1]) / 2;
-      const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
-      // Perpendicular direction: [-dy, dx]
-      return [[mx, my], [mx - dy, my + dx]];
+      const cosLat = Math.cos(my * Math.PI / 180) || 1e-6;
+      const dxm = (p2[0] - p1[0]) * cosLat, dym = (p2[1] - p1[1]); // metric-space delta
+      // Perpendicular in metric space is [-dym, dxm]; convert the lng component back.
+      return [[mx, my], [mx - dym / cosLat, my + dxm]];
     }
 
     // Get the effective line endpoints for a line filter (original or perpendicular bisector)
@@ -500,6 +556,11 @@
       zoom: 11.5, maxZoom: 18, minZoom: 9
     });
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
+    map.addControl(new maplibregl.GeolocateControl({
+      positionOptions: { enableHighAccuracy: true },
+      trackUserLocation: true,
+      showUserHeading: true
+    }), 'top-right');
 
     map.on('load', async () => {
       const resp = await fetch('stations.geojson');
@@ -644,6 +705,7 @@
       if (!drawState || drawState.type !== 'polygon') return;
       const filter = filters.find(f => f.id === drawState.filterId);
       if (filter && drawState.points.length >= 3) {
+        pushUndo();
         filter.vertices = drawState.points.slice();
         saveFilters();
       }
@@ -666,6 +728,7 @@
       html += `<div class="paste-row">
         <input type="text" id="paste-input" placeholder="Coords, Plus Code, or Maps URL"
           onkeydown="if(event.key==='Enter'){event.preventDefault();usePastedCoord()}" />
+        <button onclick="useMyLocation(this)" title="Use my location">&#128205;</button>
         <button onclick="usePastedCoord()">Use</button>
       </div>`;
       if (opts.showDone) {
@@ -679,6 +742,18 @@
     document.getElementById('draw-banner').addEventListener('click', (e) => {
       if (e.target.closest('.paste-row')) e.stopPropagation();
     });
+
+    // Drop the current draw point at the device's GPS location (seeker's own position).
+    function useMyLocation(btn) {
+      if (!navigator.geolocation) return;
+      const orig = btn.textContent;
+      btn.textContent = '…';
+      navigator.geolocation.getCurrentPosition(
+        pos => handleDrawPoint([pos.coords.longitude, pos.coords.latitude]),
+        () => { btn.textContent = '⚠'; setTimeout(() => { btn.textContent = orig; }, 1500); },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 }
+      );
+    }
 
     function usePastedCoord() {
       const input = document.getElementById('paste-input');
@@ -696,6 +771,7 @@
       if (!filter) { endDraw(); return; }
 
       if (drawState.type === 'radius') {
+        pushUndo();
         filter.center = pt;
         saveFilters(); endDraw(); applyFilters(); renderFilterList();
       } else if (drawState.type === 'line') {
@@ -704,6 +780,7 @@
           showBanner('Tap or paste second point');
           updateFilterVis();
         } else {
+          pushUndo();
           filter.points = [drawState.points[0], drawState.points[1]];
           filter.side = 1;
           saveFilters(); endDraw(); applyFilters(); renderFilterList();
@@ -728,6 +805,7 @@
       }
       map.getSource('stations-allowed').setData({ type: 'FeatureCollection', features: allowedS });
       map.getSource('stations-excluded').setData({ type: 'FeatureCollection', features: excludedS });
+      updateStationCount(allowedS, hasActive);
 
       if (anyConstraint) {
         const allowedZ = [], excludedZ = [];
@@ -757,6 +835,20 @@
 
       updateFilterVis();
       updateExclInfo();
+    }
+
+    // Live "stations remaining" readout in the legend. Lists survivors once few remain.
+    function updateStationCount(allowedS, hasActive) {
+      const el = document.getElementById('station-count');
+      if (!el || !stationData) return;
+      const total = stationData.features.length;
+      const n = allowedS.length;
+      let html = `<strong>${n}</strong> of ${total} stations`;
+      if (hasActive && n > 0 && n <= 6) {
+        const names = allowedS.map(f => f.properties.name).sort((a, b) => a.localeCompare(b));
+        html += `<div class="sc-list">${names.map(esc).join('<br>')}</div>`;
+      }
+      el.innerHTML = html;
     }
 
     function updateFilterVis() {
@@ -823,14 +915,56 @@
 
     document.getElementById('share-btn').addEventListener('click', shareFilters);
 
+    document.getElementById('undo-btn').addEventListener('click', undo);
+
     document.getElementById('add-btn').addEventListener('click', () => {
       panel.classList.add('open');
+      document.getElementById('more-menu').classList.remove('open');
       document.getElementById('add-menu').classList.toggle('open');
+    });
+
+    // "More" overflow menu (currently just Clear-all, tucked away with confirmation)
+    const moreMenu = document.getElementById('more-menu');
+    const clearBtn = document.getElementById('clear-btn');
+    const clearConfirm = document.getElementById('clear-confirm');
+    function resetClearConfirm() {
+      clearConfirm.style.display = 'none';
+      clearBtn.style.display = '';
+    }
+    document.getElementById('more-btn').addEventListener('click', () => {
+      panel.classList.add('open');
+      document.getElementById('add-menu').classList.remove('open');
+      resetClearConfirm();
+      moreMenu.classList.toggle('open');
+    });
+    clearBtn.addEventListener('click', () => {
+      clearBtn.style.display = 'none';
+      clearConfirm.style.display = 'block';
+    });
+    document.getElementById('clear-no').addEventListener('click', () => {
+      resetClearConfirm();
+      moreMenu.classList.remove('open');
+    });
+    document.getElementById('clear-yes').addEventListener('click', () => {
+      pushUndo();
+      if (drawState) endDraw();
+      filters = [];
+      if (previewMode) {
+        previewMode = false;
+        window.history.replaceState({}, '', window.location.pathname);
+        updatePreviewBar();
+      }
+      localStorage.removeItem(STORAGE_KEY);
+      applyFilters();
+      renderFilterList();
+      resetClearConfirm();
+      moreMenu.classList.remove('open');
     });
 
     document.querySelectorAll('.add-option').forEach(btn => {
       btn.addEventListener('click', () => {
         const type = btn.dataset.type;
+        if (!type) return; // ignore non-filter buttons that share styling
         const filter = {
           id: Math.random().toString(36).slice(2, 10),
           type, label: '', enabled: true, mode: 'include'
@@ -839,6 +973,7 @@
         else if (type === 'radius') { filter.center = null; filter.radius = 5; }
         else if (type === 'polygon') { filter.vertices = null; }
 
+        pushUndo();
         filters.push(filter);
         saveFilters();
         document.getElementById('add-menu').classList.remove('open');
@@ -906,8 +1041,9 @@
         const id = btn.dataset.id;
         if (btn.dataset.action === 'toggle') {
           const f = filters.find(f => f.id === id);
-          if (f) { f.enabled = !f.enabled; saveFilters(); applyFilters(); renderFilterList(); }
+          if (f) { pushUndo(); f.enabled = !f.enabled; saveFilters(); applyFilters(); renderFilterList(); }
         } else if (btn.dataset.action === 'delete') {
+          pushUndo();
           filters = filters.filter(f => f.id !== id);
           saveFilters(); applyFilters(); renderFilterList();
         } else if (btn.dataset.action === 'draw') {
@@ -921,6 +1057,7 @@
         const field = el.dataset.field;
         const f = filters.find(f => f.id === id);
         if (!f) return;
+        pushUndo();
         if (el.classList.contains('filter-label')) { f.label = el.value; }
         else if (field === 'mode') { f.mode = el.value; }
         else if (field === 'side') { f.side = parseInt(el.value); }
