@@ -110,7 +110,7 @@
       font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
       color: #888; padding: 2px 2px 6px;
     }
-    #line-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    #line-toggles, #branch-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
     .line-chip {
       flex: 1; min-width: 54px; padding: 9px 6px;
       border: 1.5px solid var(--c); border-radius: 8px;
@@ -295,13 +295,19 @@
       <button class="add-option" data-type="polygon">Polygon -- include/exclude area</button>
     </div>
     <div id="more-menu">
-      <div class="menu-section-label">Remove a whole line</div>
+      <div class="menu-section-label">Remove a metro line</div>
       <div id="line-toggles">
         <button class="line-chip" data-line="Green" style="--c:#008E4F"><span class="line-dot"></span>Green</button>
         <button class="line-chip" data-line="Orange" style="--c:#EF8122"><span class="line-dot"></span>Orange</button>
         <button class="line-chip" data-line="Yellow" style="--c:#F2C500"><span class="line-dot"></span>Yellow</button>
         <button class="line-chip" data-line="Blue" style="--c:#0072BC"><span class="line-dot"></span>Blue</button>
-        <button class="line-chip" data-line="REM" style="--c:#7AC943"><span class="line-dot"></span>REM</button>
+      </div>
+      <div class="menu-section-label">Remove a REM branch</div>
+      <div id="branch-toggles">
+        <button class="line-chip" data-branch="Rive-Sud" style="--c:#7AC943"><span class="line-dot"></span>Rive-Sud</button>
+        <button class="line-chip" data-branch="Deux-Montagnes" style="--c:#7AC943"><span class="line-dot"></span>Deux-Mtn</button>
+        <button class="line-chip" data-branch="Ouest" style="--c:#7AC943"><span class="line-dot"></span>Ouest</button>
+        <button class="line-chip" data-branch="Central" style="--c:#7AC943"><span class="line-dot"></span>Central</button>
       </div>
       <button class="menu-option" id="clear-btn" style="color:#f88">Clear all filters</button>
       <div id="clear-confirm" style="display:none">
@@ -1131,36 +1137,37 @@
       if (e.target.id === 'excl-restore') clearExcluded();
     });
 
-    // --- Remove a whole metro line ---
-    // Line membership comes from each station's `lines` property in the geojson.
-    // Removing a line just adds all its stations to the excluded set (and restoring
-    // removes them), so it composes with manual per-station removals and sharing.
-    function stationsOnLine(line) {
+    // --- Remove a whole metro line or REM branch ---
+    // A chip carries either data-line (matches the station's `lines`) or data-branch
+    // (matches the REM `branch`). Removing a group just adds all its stations to the
+    // excluded set, so it composes with manual per-station removals and sharing.
+    function stationsForChip(chip) {
       if (!stationData) return [];
+      const line = chip.dataset.line, branch = chip.dataset.branch;
       return stationData.features
-        .filter(f => (f.properties.lines || []).includes(line))
+        .filter(f => line ? (f.properties.lines || []).includes(line) : f.properties.branch === branch)
         .map(f => stationKey(f.properties));
     }
-    function lineFullyRemoved(line) {
-      const keys = stationsOnLine(line);
+    function chipFullyRemoved(chip) {
+      const keys = stationsForChip(chip);
       return keys.length > 0 && keys.every(k => excluded.has(k));
     }
-    function toggleLine(line) {
-      const keys = stationsOnLine(line);
+    function toggleChip(chip) {
+      const keys = stationsForChip(chip);
       if (!keys.length) return;
-      if (lineFullyRemoved(line)) keys.forEach(k => excluded.delete(k));
+      if (chipFullyRemoved(chip)) keys.forEach(k => excluded.delete(k));
       else keys.forEach(k => excluded.add(k));
       saveExcluded();
       applyFilters();
     }
     function updateLineChips() {
       document.querySelectorAll('.line-chip').forEach(chip => {
-        chip.classList.toggle('active', lineFullyRemoved(chip.dataset.line));
+        chip.classList.toggle('active', chipFullyRemoved(chip));
       });
     }
-    document.getElementById('line-toggles').addEventListener('click', (e) => {
+    document.getElementById('more-menu').addEventListener('click', (e) => {
       const chip = e.target.closest('.line-chip');
-      if (chip) toggleLine(chip.dataset.line);
+      if (chip) toggleChip(chip);
     });
   </script>
 </body>
