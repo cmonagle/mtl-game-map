@@ -15,13 +15,58 @@
     body { font-family: system-ui, -apple-system, sans-serif; overflow: hidden; touch-action: none; }
     #map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 
+    /* Theme tokens. Dark is the default; JS resolves auto/OS-preference to an explicit
+       data-theme="light|dark" on <html>, so only the light override is needed here. */
+    :root {
+      --panel-bg: rgba(18,18,18,0.95);
+      --legend-bg: rgba(15,15,15,0.88);
+      --popup-bg: rgba(20,20,20,0.92);
+      --banner-bg: rgba(15,15,15,0.95);
+      --card-bg: rgba(255,255,255,0.05);
+      --text: #e0e0e0;
+      --text-strong: #fff;
+      --text-muted: #888;
+      --text-dim: #aaa;
+      --placeholder: rgba(255,255,255,0.30);
+      --grip: rgba(255,255,255,0.25);
+      --sc-list: #9cf;
+      --fg-06: rgba(255,255,255,0.06);
+      --fg-08: rgba(255,255,255,0.08);
+      --fg-10: rgba(255,255,255,0.10);
+      --fg-12: rgba(255,255,255,0.12);
+      --fg-15: rgba(255,255,255,0.15);
+      --fg-18: rgba(255,255,255,0.18);
+      --fg-20: rgba(255,255,255,0.20);
+    }
+    :root[data-theme="light"] {
+      --panel-bg: rgba(248,248,249,0.96);
+      --legend-bg: rgba(255,255,255,0.93);
+      --popup-bg: rgba(255,255,255,0.97);
+      --banner-bg: rgba(248,248,249,0.97);
+      --card-bg: rgba(0,0,0,0.04);
+      --text: #1c1c1e;
+      --text-strong: #000;
+      --text-muted: #6b6b6b;
+      --text-dim: #555;
+      --placeholder: rgba(0,0,0,0.35);
+      --grip: rgba(0,0,0,0.22);
+      --sc-list: #0a58ca;
+      --fg-06: rgba(0,0,0,0.05);
+      --fg-08: rgba(0,0,0,0.06);
+      --fg-10: rgba(0,0,0,0.08);
+      --fg-12: rgba(0,0,0,0.10);
+      --fg-15: rgba(0,0,0,0.13);
+      --fg-18: rgba(0,0,0,0.14);
+      --fg-20: rgba(0,0,0,0.18);
+    }
+
     #panel {
       position: absolute;
       bottom: 0; left: 0; right: 0;
       max-height: 55vh;
       overflow-y: auto;
-      background: rgba(18, 18, 18, 0.95);
-      color: #e0e0e0;
+      background: var(--panel-bg);
+      color: var(--text);
       border-radius: 16px 16px 0 0;
       font-size: 14px;
       z-index: 10;
@@ -39,29 +84,29 @@
     }
     #panel-handle::before {
       content: ''; width: 36px; height: 4px;
-      background: rgba(255,255,255,0.25); border-radius: 2px;
+      background: var(--grip); border-radius: 2px;
     }
 
     #panel-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 16px 12px;
     }
-    #panel-header h2 { font-size: 16px; color: #fff; }
+    #panel-header h2 { font-size: 16px; color: var(--text-strong); }
     #add-btn {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #fff;
+      background: var(--fg-10);
+      border: 1px solid var(--fg-15);
+      color: var(--text-strong);
       min-width: 44px; min-height: 44px;
       border-radius: 10px; font-size: 22px;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       -webkit-tap-highlight-color: transparent;
     }
-    #add-btn:hover, #add-btn:active { background: rgba(255,255,255,0.18); }
+    #add-btn:hover, #add-btn:active { background: var(--fg-18); }
     #share-btn, #undo-btn, #more-btn {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #fff;
+      background: var(--fg-10);
+      border: 1px solid var(--fg-15);
+      color: var(--text-strong);
       min-width: 44px; min-height: 44px;
       border-radius: 10px; cursor: pointer; font-size: 16px;
       display: flex; align-items: center; justify-content: center;
@@ -69,52 +114,52 @@
     }
     #share-btn:hover, #share-btn:active,
     #undo-btn:hover, #undo-btn:active,
-    #more-btn:hover, #more-btn:active { background: rgba(255,255,255,0.18); }
+    #more-btn:hover, #more-btn:active { background: var(--fg-18); }
     #undo-btn:disabled { opacity: 0.35; cursor: default; }
     #preview-bar {
       display: none;
       padding: 10px 16px;
-      background: rgba(100,150,255,0.12);
-      border-bottom: 1px solid rgba(100,150,255,0.2);
-      font-size: 13px; color: #8af;
+      background: rgba(100,150,255,0.14);
+      border-bottom: 1px solid rgba(100,150,255,0.25);
+      font-size: 13px; color: #3b82f6;
     }
     #preview-bar.visible {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
     }
     #preview-bar button {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff; padding: 6px 14px;
+      background: var(--fg-12);
+      border: 1px solid var(--fg-20);
+      color: var(--text-strong); padding: 6px 14px;
       border-radius: 8px; font-size: 13px;
       cursor: pointer; white-space: nowrap;
       -webkit-tap-highlight-color: transparent;
     }
-    #preview-bar button:active { background: rgba(255,255,255,0.2); }
+    #preview-bar button:active { background: var(--fg-20); }
 
     #add-menu, #more-menu { display: none; padding: 0 12px 8px; }
     #add-menu.open, #more-menu.open { display: block; }
     .add-option, .menu-option {
       display: block; width: 100%;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px; color: #e0e0e0;
+      background: var(--fg-06);
+      border: 1px solid var(--fg-10);
+      border-radius: 10px; color: var(--text);
       padding: 14px 16px; margin-bottom: 6px;
       cursor: pointer; text-align: left; font-size: 14px;
       font-family: inherit;
       -webkit-tap-highlight-color: transparent;
     }
-    .add-option:active, .menu-option:active { background: rgba(255,255,255,0.12); }
+    .add-option:active, .menu-option:active { background: var(--fg-12); }
     .add-option:last-child, .menu-option:last-child { margin-bottom: 0; }
 
     .menu-section-label {
       font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-      color: #888; padding: 2px 2px 6px;
+      color: var(--text-muted); padding: 2px 2px 6px;
     }
     #line-toggles, #branch-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
     .line-chip {
       flex: 1; min-width: 54px; padding: 9px 6px;
       border: 1.5px solid var(--c); border-radius: 8px;
-      background: transparent; color: #fff;
+      background: transparent; color: var(--text);
       font-family: inherit; font-size: 12px; cursor: pointer; text-align: center;
       display: flex; align-items: center; justify-content: center; gap: 5px;
       -webkit-tap-highlight-color: transparent;
@@ -123,10 +168,20 @@
     .line-chip.active { background: var(--c); color: #111; font-weight: 700; }
     .line-chip.active .line-dot { background: #111; }
 
+    #theme-toggle { display: flex; gap: 6px; margin-bottom: 10px; }
+    .theme-opt {
+      flex: 1; padding: 9px 6px;
+      border: 1px solid var(--fg-15); border-radius: 8px;
+      background: var(--fg-06); color: var(--text);
+      font-family: inherit; font-size: 13px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .theme-opt.active { background: var(--fg-20); color: var(--text-strong); font-weight: 600; border-color: var(--fg-20); }
+
     #filter-list { padding: 0 12px 20px; }
     .filter-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--card-bg);
+      border: 1px solid var(--fg-10);
       border-radius: 12px; padding: 14px; margin-bottom: 8px;
     }
     .filter-card.disabled { opacity: 0.4; }
@@ -135,49 +190,49 @@
     }
     .filter-label {
       flex: 1; background: none; border: none;
-      color: #fff; font-size: 15px; font-weight: 600;
+      color: var(--text-strong); font-size: 15px; font-weight: 600;
       font-family: inherit; outline: none; min-width: 0;
     }
-    .filter-label::placeholder { color: rgba(255,255,255,0.3); }
+    .filter-label::placeholder { color: var(--placeholder); }
     .filter-type-badge {
       font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
       padding: 3px 8px; border-radius: 5px;
-      background: rgba(255,255,255,0.08); color: #aaa; flex-shrink: 0;
+      background: var(--fg-08); color: var(--text-dim); flex-shrink: 0;
     }
     .filter-controls {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     }
     .filter-controls select,
     .filter-controls input[type="number"] {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px; color: #e0e0e0;
+      background: var(--fg-06);
+      border: 1px solid var(--fg-15);
+      border-radius: 8px; color: var(--text);
       padding: 8px 10px; font-size: 14px;
       font-family: inherit; min-height: 40px;
     }
     .filter-controls input[type="number"] { width: 70px; }
     .filter-controls select { cursor: pointer; }
-    .mi-label { font-size: 13px; color: #888; }
-    .filter-status { font-size: 12px; color: #888; margin-top: 8px; }
+    .mi-label { font-size: 13px; color: var(--text-muted); }
+    .filter-status { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
     .filter-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-sm {
       background: none;
-      border: 1px solid rgba(255,255,255,0.12);
-      color: #aaa;
+      border: 1px solid var(--fg-12);
+      color: var(--text-dim);
       min-width: 40px; min-height: 40px;
       border-radius: 8px; cursor: pointer; font-size: 16px;
       display: flex; align-items: center; justify-content: center;
       -webkit-tap-highlight-color: transparent;
     }
-    .btn-sm:active { background: rgba(255,255,255,0.08); }
-    .btn-sm.drawing { background: rgba(100,150,255,0.2); color: #8af; border-color: rgba(100,150,255,0.3); }
+    .btn-sm:active { background: var(--fg-08); }
+    .btn-sm.drawing { background: rgba(100,150,255,0.2); color: #3b82f6; border-color: rgba(100,150,255,0.3); }
     .btn-sm.delete:active { background: rgba(255,80,80,0.15); color: #f88; }
 
     #draw-banner {
       display: none;
       position: absolute; bottom: 68px; left: 50%;
       transform: translateX(-50%);
-      background: rgba(15,15,15,0.95); color: #fff;
+      background: var(--banner-bg); color: var(--text-strong);
       padding: 14px 20px; border-radius: 12px;
       font-size: 15px; z-index: 20;
       text-align: center; backdrop-filter: blur(12px);
@@ -185,69 +240,86 @@
     }
     #draw-banner.visible { display: flex; flex-direction: column; gap: 10px; align-items: center; }
     #draw-banner button {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff; padding: 8px 16px;
+      background: var(--fg-15);
+      border: 1px solid var(--fg-20);
+      color: var(--text-strong); padding: 8px 16px;
       border-radius: 8px; font-size: 14px;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-    #draw-banner button:active { background: rgba(255,255,255,0.25); }
+    #draw-banner button:active { background: var(--fg-20); }
     .paste-row {
       display: flex; gap: 6px; width: 100%;
     }
     .paste-row input {
       flex: 1; min-width: 0;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px; color: #fff;
+      background: var(--fg-08);
+      border: 1px solid var(--fg-15);
+      border-radius: 8px; color: var(--text-strong);
       padding: 8px 10px; font-size: 13px;
       font-family: inherit; outline: none;
     }
-    .paste-row input::placeholder { color: rgba(255,255,255,0.3); }
+    .paste-row input::placeholder { color: var(--placeholder); }
     .paste-row button { flex-shrink: 0; margin: 0; }
 
     #legend {
       position: absolute; top: 12px; left: 12px;
-      background: rgba(15, 15, 15, 0.88); color: #e0e0e0;
-      padding: 10px 14px; border-radius: 10px;
+      background: var(--legend-bg); color: var(--text);
+      padding: 8px 12px; border-radius: 10px;
       font-size: 12px; line-height: 1.7;
       z-index: 10; backdrop-filter: blur(8px);
       max-width: 220px;
     }
+    #legend-header {
+      display: flex; align-items: center; gap: 6px;
+      cursor: pointer; font-weight: 600; color: var(--text-strong);
+      -webkit-tap-highlight-color: transparent; user-select: none;
+    }
+    #legend-header .caret {
+      margin-left: auto; transition: transform 0.2s; font-size: 10px; opacity: 0.7;
+    }
+    #legend.collapsed #legend-header .caret { transform: rotate(-90deg); }
+    #legend-body { margin-top: 6px; }
+    #legend.collapsed #legend-body { display: none; }
     .legend-row { display: flex; align-items: center; gap: 6px; }
-    .legend-swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 1px var(--fg-20); }
     #excl-info {
       display: none; margin-top: 6px; padding-top: 6px;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      font-size: 12px; color: #f88;
+      border-top: 1px solid var(--fg-12);
+      font-size: 12px; color: #e0665f;
     }
     #excl-info button {
-      margin-left: 6px; background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2); color: #fff;
+      margin-left: 6px; background: var(--fg-10);
+      border: 1px solid var(--fg-20); color: var(--text-strong);
       border-radius: 6px; padding: 3px 8px; font-size: 11px;
       cursor: pointer; font-family: inherit;
       -webkit-tap-highlight-color: transparent;
     }
     #station-count {
       margin-top: 6px; padding-top: 6px;
-      border-top: 1px solid rgba(255,255,255,0.12);
+      border-top: 1px solid var(--fg-12);
       line-height: 1.5;
     }
-    #station-count strong { color: #fff; font-size: 13px; }
+    #station-count strong { color: var(--text-strong); font-size: 13px; }
     #station-count .sc-list {
-      margin-top: 4px; color: #9cf; font-size: 11px; line-height: 1.5;
+      margin-top: 4px; color: var(--sc-list); font-size: 11px; line-height: 1.5;
       max-height: 40vh; overflow-y: auto;
     }
 
     .maplibregl-popup-content {
-      background: rgba(20, 20, 20, 0.92) !important;
-      color: #e0e0e0 !important; border-radius: 8px !important;
+      background: var(--popup-bg) !important;
+      color: var(--text) !important; border-radius: 8px !important;
       padding: 10px 14px !important; font-size: 14px !important;
       backdrop-filter: blur(8px);
     }
-    .maplibregl-popup-tip { border-top-color: rgba(20, 20, 20, 0.92) !important; }
-    .maplibregl-popup-content strong { color: #fff; }
+    .maplibregl-popup-tip { border-top-color: var(--popup-bg) !important; }
+    .maplibregl-popup-content strong { color: var(--text-strong); }
+    .popup-excl-btn {
+      margin-top: 8px; width: 100%; padding: 7px 10px; border-radius: 6px;
+      cursor: pointer; font-family: inherit; font-size: 13px;
+      border: 1px solid var(--fg-20); background: var(--fg-10); color: var(--text-strong);
+    }
+    .popup-excl-btn.remove { background: rgba(255,80,80,0.16); color: #e0554f; border-color: rgba(255,80,80,0.3); }
 
     #panel::-webkit-scrollbar { width: 0; }
 
@@ -267,12 +339,15 @@
   <div id="draw-banner"></div>
 
   <div id="legend">
-    <div class="legend-row"><span class="legend-swatch" style="background: #008E4F;"></span> Green</div>
-    <div class="legend-row"><span class="legend-swatch" style="background: #EF8122;"></span> Orange</div>
-    <div class="legend-row"><span class="legend-swatch" style="background: #F2C500;"></span> Yellow</div>
-    <div class="legend-row"><span class="legend-swatch" style="background: #0072BC;"></span> Blue</div>
-    <div class="legend-row"><span class="legend-swatch" style="background: #7AC943;"></span> REM</div>
-    <div class="legend-row"><span class="legend-swatch" style="background: #ffffff;"></span> Transfer</div>
+    <div id="legend-header">Lines<span class="caret">&#9660;</span></div>
+    <div id="legend-body">
+      <div class="legend-row"><span class="legend-swatch" style="background: #008E4F;"></span> Green</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #EF8122;"></span> Orange</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #F2C500;"></span> Yellow</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #0072BC;"></span> Blue</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #7AC943;"></span> REM</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #ffffff;"></span> Transfer</div>
+    </div>
     <div id="excl-info"></div>
     <div id="station-count"></div>
   </div>
@@ -295,6 +370,12 @@
       <button class="add-option" data-type="polygon">Polygon -- include/exclude area</button>
     </div>
     <div id="more-menu">
+      <div class="menu-section-label">Theme</div>
+      <div id="theme-toggle">
+        <button class="theme-opt" data-theme="auto">Auto</button>
+        <button class="theme-opt" data-theme="light">Light</button>
+        <button class="theme-opt" data-theme="dark">Dark</button>
+      </div>
       <div class="menu-section-label">Remove a metro line</div>
       <div id="line-toggles">
         <button class="line-chip" data-line="Green" style="--c:#008E4F"><span class="line-dot"></span>Green</button>
@@ -591,13 +672,118 @@
       return clipped;
     }
 
+    // --- Theme (auto / light / dark) + basemap ---
+    const THEME_KEY = 'jetlag-theme';
+    const DARK_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+    const LIGHT_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+    function getThemePref() { return localStorage.getItem(THEME_KEY) || 'auto'; }
+    function osPrefersLight() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches); }
+    function effectiveLight() { const p = getThemePref(); return p === 'light' || (p === 'auto' && osPrefersLight()); }
+    function wantedStyle() { return effectiveLight() ? LIGHT_STYLE : DARK_STYLE; }
+    function updateThemeButtons() {
+      const p = getThemePref();
+      document.querySelectorAll('.theme-opt').forEach(b => b.classList.toggle('active', b.dataset.theme === p));
+    }
+    function updateMapBasemap() {
+      const want = wantedStyle();
+      if (map.__basemap === want) return;
+      map.__basemap = want;
+      map.setStyle(want);
+      // setStyle wipes custom sources/layers; re-add them and re-populate once ready.
+      map.once('style.load', () => { addAppLayers(); applyFilters(); updateFilterVis(); });
+    }
+    function applyThemePref() {
+      document.documentElement.setAttribute('data-theme', effectiveLight() ? 'light' : 'dark');
+      updateThemeButtons();
+      updateMapBasemap();
+    }
+    function setThemePref(p) { localStorage.setItem(THEME_KEY, p); applyThemePref(); }
+    // Resolve the theme attribute immediately (before the map builds) to avoid a flash.
+    document.documentElement.setAttribute('data-theme', effectiveLight() ? 'light' : 'dark');
+    updateThemeButtons();
+    document.getElementById('theme-toggle').addEventListener('click', (e) => {
+      const b = e.target.closest('.theme-opt'); if (b) setThemePref(b.dataset.theme);
+    });
+    if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', () => { if (getThemePref() === 'auto') applyThemePref(); });
+
+    // --- Collapsible legend ---
+    const LEGEND_KEY = 'jetlag-legend-collapsed';
+    if (localStorage.getItem(LEGEND_KEY) === '1') document.getElementById('legend').classList.add('collapsed');
+    document.getElementById('legend-header').addEventListener('click', () => {
+      const el = document.getElementById('legend');
+      el.classList.toggle('collapsed');
+      localStorage.setItem(LEGEND_KEY, el.classList.contains('collapsed') ? '1' : '0');
+    });
+
+    // Adds all app sources/layers. Re-run after a basemap swap (setStyle wipes them).
+    // Label / dot-stroke colours adapt to the active theme.
+    function addAppLayers() {
+      const efc = { type: 'FeatureCollection', features: [] };
+      const light = effectiveLight();
+      const labelColor = light ? '#1c1c1e' : '#e0e0e0';
+      const labelHalo = light ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.8)';
+      const exclLabel = light ? '#9a9a9a' : '#555';
+      const exclHalo = light ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.6)';
+      const dotStroke = light ? '#333' : '#fff';
+      const exclStroke = light ? '#bbb' : '#444';
+
+      map.addSource('zones-excluded', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'zone-excluded-fills', type: 'fill', source: 'zones-excluded',
+        paint: { 'fill-color': EXCLUDED_COLOR, 'fill-opacity': 0.08 } });
+      map.addLayer({ id: 'zone-excluded-borders', type: 'line', source: 'zones-excluded',
+        paint: { 'line-color': EXCLUDED_COLOR, 'line-opacity': 0.2, 'line-width': 1 } });
+
+      map.addSource('zones-allowed', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'zone-allowed-fills', type: 'fill', source: 'zones-allowed',
+        paint: { 'fill-color': ['match', ['get', 'zone'], 'A', ZONE_A_COLOR, 'B', ZONE_B_COLOR, '#888'], 'fill-opacity': 0.25 } });
+      map.addLayer({ id: 'zone-allowed-borders', type: 'line', source: 'zones-allowed',
+        paint: { 'line-color': ['match', ['get', 'zone'], 'A', ZONE_A_COLOR, 'B', ZONE_B_COLOR, '#888'], 'line-opacity': 0.7, 'line-width': 1.5 } });
+
+      map.addSource('stations-excluded', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'station-excluded-circles', type: 'circle', source: 'stations-excluded',
+        paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 2, 14, 5, 18, 8],
+          'circle-color': EXCLUDED_COLOR, 'circle-stroke-color': exclStroke, 'circle-stroke-width': 1 } });
+
+      map.addSource('stations-allowed', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'station-allowed-circles', type: 'circle', source: 'stations-allowed',
+        paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 4, 14, 8, 18, 14],
+          'circle-color': ['coalesce', ['get', 'lineColor'], '#888'], 'circle-stroke-color': dotStroke, 'circle-stroke-width': 2 } });
+
+      map.addLayer({ id: 'station-labels', type: 'symbol', source: 'stations-allowed', minzoom: 12,
+        layout: { 'text-field': ['get', 'name'], 'text-size': 12, 'text-offset': [0, 1.4], 'text-anchor': 'top', 'text-optional': true, 'text-allow-overlap': false, 'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'] },
+        paint: { 'text-color': labelColor, 'text-halo-color': labelHalo, 'text-halo-width': 1.5 } });
+      map.addLayer({ id: 'station-excluded-labels', type: 'symbol', source: 'stations-excluded', minzoom: 13,
+        layout: { 'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.2], 'text-anchor': 'top', 'text-optional': true, 'text-allow-overlap': false, 'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'] },
+        paint: { 'text-color': exclLabel, 'text-halo-color': exclHalo, 'text-halo-width': 1 } });
+
+      map.addSource('filter-lines', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'filter-lines-layer', type: 'line', source: 'filter-lines',
+        paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-dasharray': [6, 4], 'line-opacity': 0.6 } });
+      map.addSource('filter-polygons', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'filter-polygons-fill', type: 'fill', source: 'filter-polygons',
+        paint: { 'fill-color': '#e040fb', 'fill-opacity': 0.08 } });
+      map.addLayer({ id: 'filter-polygons-border', type: 'line', source: 'filter-polygons',
+        paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-dasharray': [6, 4], 'line-opacity': 0.6 } });
+      map.addSource('filter-circles', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'filter-circles-layer', type: 'line', source: 'filter-circles',
+        paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-dasharray': [6, 4], 'line-opacity': 0.6 } });
+      map.addSource('filter-points', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'filter-points-layer', type: 'circle', source: 'filter-points',
+        paint: { 'circle-radius': 6, 'circle-color': '#e040fb', 'circle-stroke-color': dotStroke, 'circle-stroke-width': 2 } });
+      map.addSource('draw-preview', { type: 'geojson', data: efc });
+      map.addLayer({ id: 'draw-preview-line', type: 'line', source: 'draw-preview',
+        paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-opacity': 0.5 } });
+    }
+
     // --- Map ---
     const map = new maplibregl.Map({
       container: 'map',
-      style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+      style: wantedStyle(),
       center: [-73.58, 45.51],
       zoom: 11.5, maxZoom: 18, minZoom: 9
     });
+    map.__basemap = wantedStyle();
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
     map.addControl(new maplibregl.GeolocateControl({
       positionOptions: { enableHighAccuracy: true },
@@ -614,81 +800,7 @@
       // Precompute each station's dot colour from its line(s) for data-driven styling.
       for (const f of stationData.features) f.properties.lineColor = lineColorFor(f.properties.lines);
 
-      const efc = { type: 'FeatureCollection', features: [] };
-
-      map.addSource('zones-excluded', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'zone-excluded-fills', type: 'fill', source: 'zones-excluded',
-        paint: { 'fill-color': EXCLUDED_COLOR, 'fill-opacity': 0.08 } });
-      map.addLayer({ id: 'zone-excluded-borders', type: 'line', source: 'zones-excluded',
-        paint: { 'line-color': EXCLUDED_COLOR, 'line-opacity': 0.2, 'line-width': 1 } });
-
-      map.addSource('zones-allowed', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'zone-allowed-fills', type: 'fill', source: 'zones-allowed',
-        paint: {
-          'fill-color': ['match', ['get', 'zone'], 'A', ZONE_A_COLOR, 'B', ZONE_B_COLOR, '#888'],
-          'fill-opacity': 0.25
-        } });
-      map.addLayer({ id: 'zone-allowed-borders', type: 'line', source: 'zones-allowed',
-        paint: {
-          'line-color': ['match', ['get', 'zone'], 'A', ZONE_A_COLOR, 'B', ZONE_B_COLOR, '#888'],
-          'line-opacity': 0.7, 'line-width': 1.5
-        } });
-
-      map.addSource('stations-excluded', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'station-excluded-circles', type: 'circle', source: 'stations-excluded',
-        paint: {
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 2, 14, 5, 18, 8],
-          'circle-color': EXCLUDED_COLOR, 'circle-stroke-color': '#444', 'circle-stroke-width': 1
-        } });
-
-      map.addSource('stations-allowed', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'station-allowed-circles', type: 'circle', source: 'stations-allowed',
-        paint: {
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 4, 14, 8, 18, 14],
-          'circle-color': ['coalesce', ['get', 'lineColor'], '#888'],
-          'circle-stroke-color': '#fff', 'circle-stroke-width': 2
-        } });
-
-      map.addLayer({ id: 'station-labels', type: 'symbol', source: 'stations-allowed', minzoom: 12,
-        layout: {
-          'text-field': ['get', 'name'], 'text-size': 12, 'text-offset': [0, 1.4],
-          'text-anchor': 'top', 'text-optional': true, 'text-allow-overlap': false,
-          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold']
-        },
-        paint: { 'text-color': '#e0e0e0', 'text-halo-color': 'rgba(0,0,0,0.8)', 'text-halo-width': 1.5 }
-      });
-      map.addLayer({ id: 'station-excluded-labels', type: 'symbol', source: 'stations-excluded', minzoom: 13,
-        layout: {
-          'text-field': ['get', 'name'], 'text-size': 10, 'text-offset': [0, 1.2],
-          'text-anchor': 'top', 'text-optional': true, 'text-allow-overlap': false,
-          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold']
-        },
-        paint: { 'text-color': '#555', 'text-halo-color': 'rgba(0,0,0,0.6)', 'text-halo-width': 1 }
-      });
-
-      // Filter visualization layers
-      map.addSource('filter-lines', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'filter-lines-layer', type: 'line', source: 'filter-lines',
-        paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-dasharray': [6, 4], 'line-opacity': 0.6 } });
-
-      map.addSource('filter-polygons', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'filter-polygons-fill', type: 'fill', source: 'filter-polygons',
-        paint: { 'fill-color': '#e040fb', 'fill-opacity': 0.08 } });
-      map.addLayer({ id: 'filter-polygons-border', type: 'line', source: 'filter-polygons',
-        paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-dasharray': [6, 4], 'line-opacity': 0.6 } });
-
-      map.addSource('filter-circles', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'filter-circles-layer', type: 'line', source: 'filter-circles',
-        paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-dasharray': [6, 4], 'line-opacity': 0.6 } });
-
-      map.addSource('filter-points', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'filter-points-layer', type: 'circle', source: 'filter-points',
-        paint: { 'circle-radius': 6, 'circle-color': '#e040fb', 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
-
-      // In-progress polygon outline (while drawing)
-      map.addSource('draw-preview', { type: 'geojson', data: efc });
-      map.addLayer({ id: 'draw-preview-line', type: 'line', source: 'draw-preview',
-        paint: { 'line-color': '#e040fb', 'line-width': 2, 'line-opacity': 0.5 } });
+      addAppLayers();
 
       // Station click (popup) — shows status and a Remove/Restore toggle
       for (const layerId of ['station-allowed-circles', 'station-excluded-circles']) {
@@ -700,15 +812,12 @@
           const allowed = layerId.includes('allowed');
           const isExcl = excluded.has(key);
           const status = allowed ? 'Allowed' : (isExcl ? 'Removed' : 'Excluded by filter');
-          const statusColor = allowed ? '#4ade80' : (isExcl ? '#f88' : '#888');
-          const btnStyle = `margin-top:8px;width:100%;padding:7px 10px;border-radius:6px;cursor:pointer;`
-            + `font-family:inherit;font-size:13px;border:1px solid rgba(255,255,255,0.2);`
-            + (isExcl ? `background:rgba(255,255,255,0.1);color:#fff;` : `background:rgba(255,80,80,0.15);color:#f88;`);
+          const statusColor = allowed ? '#22a559' : (isExcl ? '#e0554f' : '#888');
           const popup = new maplibregl.Popup({ offset: 14 })
             .setLngLat(coords)
             .setHTML(`<strong>${props.name}</strong><br>${props.system} &middot; Zone ${props.zone}<br>
               <span style="color:${statusColor}">${status}</span>
-              <button class="popup-excl-btn" style="${btnStyle}">${isExcl ? 'Restore station' : 'Remove station'}</button>`)
+              <button class="popup-excl-btn ${isExcl ? '' : 'remove'}">${isExcl ? 'Restore station' : 'Remove station'}</button>`)
             .addTo(map);
           const btn = popup.getElement().querySelector('.popup-excl-btn');
           if (btn) btn.addEventListener('click', () => {
