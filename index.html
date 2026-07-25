@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script src="https://unpkg.com/@turf/turf@7/turf.min.js"></script>
+  <script>var exports = {};</script>
+  <script src="https://unpkg.com/open-location-code"></script>
+  <script>var OpenLocationCode = exports.OpenLocationCode;</script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: system-ui, -apple-system, sans-serif; overflow: hidden; touch-action: none; }
@@ -55,6 +58,35 @@
       -webkit-tap-highlight-color: transparent;
     }
     #add-btn:hover, #add-btn:active { background: rgba(255,255,255,0.18); }
+    #share-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      min-width: 44px; min-height: 44px;
+      border-radius: 10px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #share-btn:hover, #share-btn:active { background: rgba(255,255,255,0.18); }
+    #preview-bar {
+      display: none;
+      padding: 10px 16px;
+      background: rgba(100,150,255,0.12);
+      border-bottom: 1px solid rgba(100,150,255,0.2);
+      font-size: 13px; color: #8af;
+    }
+    #preview-bar.visible {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    #preview-bar button {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; padding: 6px 14px;
+      border-radius: 8px; font-size: 13px;
+      cursor: pointer; white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #preview-bar button:active { background: rgba(255,255,255,0.2); }
 
     #add-menu { display: none; padding: 0 12px 8px; }
     #add-menu.open { display: block; }
@@ -126,21 +158,34 @@
       position: absolute; bottom: 68px; left: 50%;
       transform: translateX(-50%);
       background: rgba(15,15,15,0.95); color: #fff;
-      padding: 14px 24px; border-radius: 12px;
+      padding: 14px 20px; border-radius: 12px;
       font-size: 15px; z-index: 20;
       text-align: center; backdrop-filter: blur(12px);
-      white-space: nowrap;
+      width: 320px; max-width: calc(100vw - 24px);
     }
-    #draw-banner.visible { display: block; }
+    #draw-banner.visible { display: flex; flex-direction: column; gap: 10px; align-items: center; }
     #draw-banner button {
       background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.2);
       color: #fff; padding: 8px 16px;
       border-radius: 8px; font-size: 14px;
-      cursor: pointer; margin-left: 12px;
+      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
     #draw-banner button:active { background: rgba(255,255,255,0.25); }
+    .paste-row {
+      display: flex; gap: 6px; width: 100%;
+    }
+    .paste-row input {
+      flex: 1; min-width: 0;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px; color: #fff;
+      padding: 8px 10px; font-size: 13px;
+      font-family: inherit; outline: none;
+    }
+    .paste-row input::placeholder { color: rgba(255,255,255,0.3); }
+    .paste-row button { flex-shrink: 0; margin: 0; }
 
     #legend {
       position: absolute; top: 12px; left: 12px;
@@ -187,8 +232,12 @@
     <div id="panel-handle"></div>
     <div id="panel-header">
       <h2>Clue Filters</h2>
-      <button id="add-btn" title="Add filter">+</button>
+      <div style="display:flex;gap:6px">
+        <button id="share-btn" title="Share" style="font-size:16px">&#128279;</button>
+        <button id="add-btn" title="Add filter">+</button>
+      </div>
     </div>
+    <div id="preview-bar"></div>
     <div id="add-menu">
       <button class="add-option" data-type="line">Line -- include/exclude one side</button>
       <button class="add-option" data-type="radius">Radius -- include/exclude circle</button>
@@ -210,12 +259,119 @@
     let drawState = null;
     let stationData = null;
     let zoneData = null;
+    let previewMode = false;
 
     function loadFilters() {
+      // Check for shared filters in URL
+      const params = new URLSearchParams(window.location.search);
+      const shared = params.get('f');
+      if (shared) {
+        try {
+          filters = JSON.parse(decodeURIComponent(shared));
+          previewMode = true;
+          return;
+        } catch {}
+      }
       try { filters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { filters = []; }
     }
     function saveFilters() {
+      if (previewMode) return; // don't save preview state to localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
+    }
+
+    function shareFilters() {
+      const data = encodeURIComponent(JSON.stringify(filters));
+      const url = `${window.location.origin}${window.location.pathname}?f=${data}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          const btn = document.getElementById('share-btn');
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.innerHTML = '&#128279;'; }, 1500);
+        });
+      } else {
+        prompt('Share URL:', url);
+      }
+    }
+
+    function adoptPreview() {
+      previewMode = false;
+      // Clear the query param
+      window.history.replaceState({}, '', window.location.pathname);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
+      updatePreviewBar();
+    }
+
+    function exitPreview() {
+      previewMode = false;
+      window.history.replaceState({}, '', window.location.pathname);
+      try { filters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { filters = []; }
+      updatePreviewBar();
+      applyFilters();
+      renderFilterList();
+    }
+
+    function updatePreviewBar() {
+      const bar = document.getElementById('preview-bar');
+      if (previewMode) {
+        bar.innerHTML = `
+          <span>Viewing shared filters</span>
+          <div style="display:flex;gap:6px">
+            <button onclick="adoptPreview()">Adopt</button>
+            <button onclick="exitPreview()">Discard</button>
+          </div>`;
+        bar.classList.add('visible');
+      } else {
+        bar.classList.remove('visible');
+      }
+    }
+
+    // --- Coordinate parsing ---
+    // Montreal reference for short Plus Codes
+    const MTL_LAT = 45.5, MTL_LNG = -73.6;
+
+    function parseCoordinate(input) {
+      const s = input.trim();
+      if (!s) return null;
+
+      // Google Maps URL: extract @lat,lng or ?q=lat,lng or /place/lat,lng
+      const urlMatch = s.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/) ||
+                       s.match(/[?&]q=(-?\d+\.?\d*),(-?\d+\.?\d*)/) ||
+                       s.match(/place\/(-?\d+\.?\d*),(-?\d+\.?\d*)/);
+      if (urlMatch) {
+        const lat = parseFloat(urlMatch[1]), lng = parseFloat(urlMatch[2]);
+        if (isFinite(lat) && isFinite(lng)) return [lng, lat];
+      }
+
+      // Plus Code (full like "87Q8GR2C+9W" or short like "GR2C+9W")
+      if (s.includes('+')) {
+        try {
+          // Strip any trailing location text (e.g. "GR2C+9W Montreal, QC")
+          const code = s.split(/\s/)[0];
+          if (OpenLocationCode.isValid(code)) {
+            let fullCode = code;
+            if (!OpenLocationCode.isFull(code)) {
+              fullCode = OpenLocationCode.recoverNearest(code, MTL_LAT, MTL_LNG);
+            }
+            const area = OpenLocationCode.decode(fullCode);
+            return [area.longitudeCenter, area.latitudeCenter];
+          }
+        } catch {}
+      }
+
+      // Lat, Lng (various separators)
+      const coordMatch = s.match(/^(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)$/);
+      if (coordMatch) {
+        const a = parseFloat(coordMatch[1]), b = parseFloat(coordMatch[2]);
+        if (isFinite(a) && isFinite(b)) {
+          // If first number looks like latitude (< 90) and second like longitude
+          if (Math.abs(a) <= 90 && Math.abs(b) > 90) return [b, a];
+          if (Math.abs(b) <= 90 && Math.abs(a) > 90) return [a, b];
+          // Ambiguous — assume lat, lng (Google Maps format)
+          return [b, a];
+        }
+      }
+
+      return null;
     }
 
     // --- Geometry ---
@@ -423,34 +579,13 @@
       map.on('click', (e) => {
         if (!drawState) return;
         if (Date.now() < drawState.activateAt) return;
-
-        const pt = [e.lngLat.lng, e.lngLat.lat];
-        const filter = filters.find(f => f.id === drawState.filterId);
-        if (!filter) { endDraw(); return; }
-
-        if (drawState.type === 'radius') {
-          filter.center = pt;
-          saveFilters(); endDraw(); applyFilters(); renderFilterList();
-        } else if (drawState.type === 'line') {
-          drawState.points.push(pt);
-          if (drawState.points.length === 1) {
-            showBanner('Tap second point');
-            updateFilterVis();
-          } else {
-            filter.points = [drawState.points[0], drawState.points[1]];
-            filter.side = 1;
-            saveFilters(); endDraw(); applyFilters(); renderFilterList();
-          }
-        } else if (drawState.type === 'polygon') {
-          drawState.points.push(pt);
-          showBanner(`${drawState.points.length} points`, true);
-          updateFilterVis();
-        }
+        handleDrawPoint([e.lngLat.lng, e.lngLat.lat]);
       });
 
       loadFilters();
       applyFilters();
       renderFilterList();
+      updatePreviewBar();
     });
 
     // --- Drawing ---
@@ -458,9 +593,9 @@
       const activateAt = Date.now() + 300;
       drawState = { filterId, type, points: [], activateAt };
       map.getCanvas().style.cursor = 'crosshair';
-      if (type === 'radius') showBanner('Tap center point');
-      else if (type === 'line') showBanner('Tap first point');
-      else if (type === 'polygon') showBanner('Tap to add points', true);
+      if (type === 'radius') showBanner('Tap or paste center point');
+      else if (type === 'line') showBanner('Tap or paste first point');
+      else if (type === 'polygon') showBanner('Tap or paste points', { showDone: true });
       renderFilterList();
     }
 
@@ -484,14 +619,59 @@
       }
     }
 
-    function showBanner(text, showDone) {
+    function showBanner(text, opts = {}) {
       const b = document.getElementById('draw-banner');
-      if (showDone) {
-        b.innerHTML = text + '<button onclick="finishPolygonDraw()">Done</button>';
-      } else {
-        b.textContent = text;
+      let html = `<div>${text}</div>`;
+      html += `<div class="paste-row">
+        <input type="text" id="paste-input" placeholder="Coords, Plus Code, or Maps URL"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();usePastedCoord()}" />
+        <button onclick="usePastedCoord()">Use</button>
+      </div>`;
+      if (opts.showDone) {
+        html += `<button onclick="finishPolygonDraw()">Done</button>`;
       }
+      b.innerHTML = html;
       b.classList.add('visible');
+    }
+
+    // Prevent clicks on the paste input from placing map points
+    document.getElementById('draw-banner').addEventListener('click', (e) => {
+      if (e.target.closest('.paste-row')) e.stopPropagation();
+    });
+
+    function usePastedCoord() {
+      const input = document.getElementById('paste-input');
+      if (!input) return;
+      const pt = parseCoordinate(input.value);
+      if (!pt) { input.style.borderColor = '#f44'; return; }
+      input.style.borderColor = '';
+      input.value = '';
+      handleDrawPoint(pt);
+    }
+
+    function handleDrawPoint(pt) {
+      if (!drawState) return;
+      const filter = filters.find(f => f.id === drawState.filterId);
+      if (!filter) { endDraw(); return; }
+
+      if (drawState.type === 'radius') {
+        filter.center = pt;
+        saveFilters(); endDraw(); applyFilters(); renderFilterList();
+      } else if (drawState.type === 'line') {
+        drawState.points.push(pt);
+        if (drawState.points.length === 1) {
+          showBanner('Tap or paste second point');
+          updateFilterVis();
+        } else {
+          filter.points = [drawState.points[0], drawState.points[1]];
+          filter.side = 1;
+          saveFilters(); endDraw(); applyFilters(); renderFilterList();
+        }
+      } else if (drawState.type === 'polygon') {
+        drawState.points.push(pt);
+        showBanner(`${drawState.points.length} points`, { showDone: true });
+        updateFilterVis();
+      }
     }
 
     // --- Apply filters ---
@@ -596,6 +776,8 @@
     // --- Panel UI ---
     const panel = document.getElementById('panel');
     document.getElementById('panel-handle').addEventListener('click', () => panel.classList.toggle('open'));
+
+    document.getElementById('share-btn').addEventListener('click', shareFilters);
 
     document.getElementById('add-btn').addEventListener('click', () => {
       panel.classList.add('open');
