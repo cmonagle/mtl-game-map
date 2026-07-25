@@ -689,8 +689,10 @@
       if (map.__basemap === want) return;
       map.__basemap = want;
       map.setStyle(want);
-      // setStyle wipes custom sources/layers; re-add them and re-populate once ready.
-      map.once('style.load', () => { addAppLayers(); applyFilters(); updateFilterVis(); });
+      // setStyle wipes custom sources/layers; re-add them once the new style's data is in.
+      // (maplibre fires 'styledata', not 'style.load', after setStyle.)
+      const reAdd = () => { if (map.getSource('stations-allowed')) return; addAppLayers(); applyFilters(); updateFilterVis(); };
+      if (map.isStyleLoaded()) reAdd(); else map.once('styledata', reAdd);
     }
     function applyThemePref() {
       document.documentElement.setAttribute('data-theme', effectiveLight() ? 'light' : 'dark');
