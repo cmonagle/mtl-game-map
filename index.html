@@ -267,8 +267,12 @@
   <div id="draw-banner"></div>
 
   <div id="legend">
-    <div class="legend-row"><span class="legend-swatch" style="background: #0078D4;"></span> Metro</div>
-    <div class="legend-row"><span class="legend-swatch" style="background: #00A86B;"></span> REM</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #008E4F;"></span> Green</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #EF8122;"></span> Orange</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #F2C500;"></span> Yellow</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #0072BC;"></span> Blue</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #7AC943;"></span> REM</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #ffffff;"></span> Transfer</div>
     <div id="excl-info"></div>
     <div id="station-count"></div>
   </div>
@@ -317,6 +321,14 @@
     const ZONE_A_COLOR = '#0078D4';
     const ZONE_B_COLOR = '#F5A623';
     const EXCLUDED_COLOR = '#555';
+    // Per-line dot colours. Interchange stations (>1 line) render white.
+    const LINE_COLORS = { Green: '#008E4F', Orange: '#EF8122', Yellow: '#F2C500', Blue: '#0072BC', REM: '#7AC943' };
+    const TRANSFER_COLOR = '#ffffff';
+    function lineColorFor(lines) {
+      if (!lines || !lines.length) return '#888';
+      if (lines.length > 1) return TRANSFER_COLOR;
+      return LINE_COLORS[lines[0]] || '#888';
+    }
     const STORAGE_KEY = 'jetlag-filters';
     const EXCL_KEY = 'jetlag-excluded';
     const MILES_TO_KM = 1.60934;
@@ -593,6 +605,8 @@
 
       zoneData = { type: 'FeatureCollection', features: data.features.filter(f => f.properties.featureType === 'hidingZone') };
       stationData = { type: 'FeatureCollection', features: data.features.filter(f => f.properties.featureType === 'station') };
+      // Precompute each station's dot colour from its line(s) for data-driven styling.
+      for (const f of stationData.features) f.properties.lineColor = lineColorFor(f.properties.lines);
 
       const efc = { type: 'FeatureCollection', features: [] };
 
@@ -625,7 +639,7 @@
       map.addLayer({ id: 'station-allowed-circles', type: 'circle', source: 'stations-allowed',
         paint: {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 4, 14, 8, 18, 14],
-          'circle-color': ['match', ['get', 'system'], 'Metro', METRO_COLOR, 'REM', REM_COLOR, '#888'],
+          'circle-color': ['coalesce', ['get', 'lineColor'], '#888'],
           'circle-stroke-color': '#fff', 'circle-stroke-width': 2
         } });
 
