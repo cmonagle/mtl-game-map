@@ -149,7 +149,6 @@
       -webkit-tap-highlight-color: transparent;
     }
     .btn-sm:active { background: rgba(255,255,255,0.08); }
-    .btn-sm.active { background: rgba(100,200,100,0.15); color: #8f8; border-color: rgba(100,200,100,0.3); }
     .btn-sm.drawing { background: rgba(100,150,255,0.2); color: #8af; border-color: rgba(100,150,255,0.3); }
     .btn-sm.delete:active { background: rgba(255,80,80,0.15); color: #f88; }
 
@@ -829,7 +828,7 @@
             <input class="filter-label" type="text" placeholder="Label..." value="${esc(filter.label)}" data-id="${filter.id}" />
             <div class="filter-actions">
               <button class="btn-sm ${isDrawing ? 'drawing' : ''}" data-action="draw" data-id="${filter.id}" title="Redraw">&#9998;</button>
-              <button class="btn-sm ${filter.enabled ? 'active' : ''}" data-action="toggle" data-id="${filter.id}" title="Toggle">&#10003;</button>
+              <button class="btn-sm" data-action="toggle" data-id="${filter.id}" title="Toggle" style="font-size:18px;${filter.enabled ? '' : 'opacity:0.3'}">${filter.enabled ? '👁️' : '👁️'}</button>
               <button class="btn-sm delete" data-action="delete" data-id="${filter.id}" title="Delete">&times;</button>
             </div>
           </div>
