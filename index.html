@@ -106,6 +106,23 @@
     .add-option:active, .menu-option:active { background: rgba(255,255,255,0.12); }
     .add-option:last-child, .menu-option:last-child { margin-bottom: 0; }
 
+    .menu-section-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #888; padding: 2px 2px 6px;
+    }
+    #line-toggles, #branch-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .line-chip {
+      flex: 1; min-width: 54px; padding: 9px 6px;
+      border: 1.5px solid var(--c); border-radius: 8px;
+      background: transparent; color: #fff;
+      font-family: inherit; font-size: 12px; cursor: pointer; text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .line-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex-shrink: 0; }
+    .line-chip.active { background: var(--c); color: #111; font-weight: 700; }
+    .line-chip.active .line-dot { background: #111; }
+
     #filter-list { padding: 0 12px 20px; }
     .filter-card {
       background: rgba(255,255,255,0.05);
@@ -250,8 +267,12 @@
   <div id="draw-banner"></div>
 
   <div id="legend">
-    <div class="legend-row"><span class="legend-swatch" style="background: #0078D4;"></span> Metro</div>
-    <div class="legend-row"><span class="legend-swatch" style="background: #00A86B;"></span> REM</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #008E4F;"></span> Green</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #EF8122;"></span> Orange</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #F2C500;"></span> Yellow</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #0072BC;"></span> Blue</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #7AC943;"></span> REM</div>
+    <div class="legend-row"><span class="legend-swatch" style="background: #ffffff;"></span> Transfer</div>
     <div id="excl-info"></div>
     <div id="station-count"></div>
   </div>
@@ -274,6 +295,20 @@
       <button class="add-option" data-type="polygon">Polygon -- include/exclude area</button>
     </div>
     <div id="more-menu">
+      <div class="menu-section-label">Remove a metro line</div>
+      <div id="line-toggles">
+        <button class="line-chip" data-line="Green" style="--c:#008E4F"><span class="line-dot"></span>Green</button>
+        <button class="line-chip" data-line="Orange" style="--c:#EF8122"><span class="line-dot"></span>Orange</button>
+        <button class="line-chip" data-line="Yellow" style="--c:#F2C500"><span class="line-dot"></span>Yellow</button>
+        <button class="line-chip" data-line="Blue" style="--c:#0072BC"><span class="line-dot"></span>Blue</button>
+      </div>
+      <div class="menu-section-label">Remove a REM branch</div>
+      <div id="branch-toggles">
+        <button class="line-chip" data-branch="Rive-Sud" style="--c:#7AC943"><span class="line-dot"></span>Rive-Sud</button>
+        <button class="line-chip" data-branch="Deux-Montagnes" style="--c:#7AC943"><span class="line-dot"></span>Deux-Mtn</button>
+        <button class="line-chip" data-branch="Ouest" style="--c:#7AC943"><span class="line-dot"></span>Ouest</button>
+        <button class="line-chip" data-branch="Central" style="--c:#7AC943"><span class="line-dot"></span>Central</button>
+      </div>
       <button class="menu-option" id="clear-btn" style="color:#f88">Clear all filters</button>
       <div id="clear-confirm" style="display:none">
         <div style="font-size:13px;color:#e0e0e0;padding:8px 4px 10px">Clear all filters and saved data on this device? This can be undone until you reload.</div>
@@ -292,6 +327,14 @@
     const ZONE_A_COLOR = '#0078D4';
     const ZONE_B_COLOR = '#F5A623';
     const EXCLUDED_COLOR = '#555';
+    // Per-line dot colours. Interchange stations (>1 line) render white.
+    const LINE_COLORS = { Green: '#008E4F', Orange: '#EF8122', Yellow: '#F2C500', Blue: '#0072BC', REM: '#7AC943' };
+    const TRANSFER_COLOR = '#ffffff';
+    function lineColorFor(lines) {
+      if (!lines || !lines.length) return '#888';
+      if (lines.length > 1) return TRANSFER_COLOR;
+      return LINE_COLORS[lines[0]] || '#888';
+    }
     const STORAGE_KEY = 'jetlag-filters';
     const EXCL_KEY = 'jetlag-excluded';
     const MILES_TO_KM = 1.60934;
@@ -568,6 +611,8 @@
 
       zoneData = { type: 'FeatureCollection', features: data.features.filter(f => f.properties.featureType === 'hidingZone') };
       stationData = { type: 'FeatureCollection', features: data.features.filter(f => f.properties.featureType === 'station') };
+      // Precompute each station's dot colour from its line(s) for data-driven styling.
+      for (const f of stationData.features) f.properties.lineColor = lineColorFor(f.properties.lines);
 
       const efc = { type: 'FeatureCollection', features: [] };
 
@@ -600,7 +645,7 @@
       map.addLayer({ id: 'station-allowed-circles', type: 'circle', source: 'stations-allowed',
         paint: {
           'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 4, 14, 8, 18, 14],
-          'circle-color': ['match', ['get', 'system'], 'Metro', METRO_COLOR, 'REM', REM_COLOR, '#888'],
+          'circle-color': ['coalesce', ['get', 'lineColor'], '#888'],
           'circle-stroke-color': '#fff', 'circle-stroke-width': 2
         } });
 
@@ -1071,6 +1116,7 @@
 
     // --- Removed stations (manual exclusion) ---
     function updateExclInfo() {
+      updateLineChips();
       const el = document.getElementById('excl-info');
       if (!el) return;
       if (excluded.size) {
@@ -1089,6 +1135,39 @@
     }
     document.getElementById('excl-info').addEventListener('click', (e) => {
       if (e.target.id === 'excl-restore') clearExcluded();
+    });
+
+    // --- Remove a whole metro line or REM branch ---
+    // A chip carries either data-line (matches the station's `lines`) or data-branch
+    // (matches the REM `branch`). Removing a group just adds all its stations to the
+    // excluded set, so it composes with manual per-station removals and sharing.
+    function stationsForChip(chip) {
+      if (!stationData) return [];
+      const line = chip.dataset.line, branch = chip.dataset.branch;
+      return stationData.features
+        .filter(f => line ? (f.properties.lines || []).includes(line) : f.properties.branch === branch)
+        .map(f => stationKey(f.properties));
+    }
+    function chipFullyRemoved(chip) {
+      const keys = stationsForChip(chip);
+      return keys.length > 0 && keys.every(k => excluded.has(k));
+    }
+    function toggleChip(chip) {
+      const keys = stationsForChip(chip);
+      if (!keys.length) return;
+      if (chipFullyRemoved(chip)) keys.forEach(k => excluded.delete(k));
+      else keys.forEach(k => excluded.add(k));
+      saveExcluded();
+      applyFilters();
+    }
+    function updateLineChips() {
+      document.querySelectorAll('.line-chip').forEach(chip => {
+        chip.classList.toggle('active', chipFullyRemoved(chip));
+      });
+    }
+    document.getElementById('more-menu').addEventListener('click', (e) => {
+      const chip = e.target.closest('.line-chip');
+      if (chip) toggleChip(chip);
     });
   </script>
 </body>

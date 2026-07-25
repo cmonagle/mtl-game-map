@@ -9,6 +9,48 @@ const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 // 1/4 mile in meters
 const QUARTER_MILE_M = 402.336;
 
+// Metro line membership by station name. REM stations are assigned "REM" by system.
+// A station may belong to multiple lines (transfer stations, e.g. Berri-UQAM).
+const METRO_LINES = {
+  Green: ["Angrignon","Monk","Jolicoeur","Verdun","De l'Église","LaSalle","Charlevoix","Lionel-Groulx","Atwater","Guy-Concordia","Peel","McGill","Place-des-Arts","Saint-Laurent","Berri-UQAM","Beaudry","Papineau","Frontenac","Préfontaine","Joliette","Pie IX","Viau","Assomption","Cadillac","Langelier","Radisson","Honoré-Beaugrand"],
+  Orange: ["Côte-Vertu","Du Collège","De La Savane","Namur","Plamondon","Côte-Sainte-Catherine","Snowdon","Villa-Maria","Vendôme","Place Saint-Henri","Lionel-Groulx","Georges-Vanier","Lucien-L'Allier","Bonaventure","Square-Victoria-OACI","Place d'Armes","Champ-de-Mars","Berri-UQAM","Sherbrooke","Mont-Royal","Laurier","Rosemont","Beaubien","Jean-Talon","Jarry","Crémazie","Sauvé","Henri-Bourassa","Cartier","De la Concorde","Montmorency"],
+  Yellow: ["Berri-UQAM","Jean-Drapeau","Longueuil-Université-de-Sherbrooke"],
+  Blue: ["Snowdon","Côte-des-Neiges","Université-de-Montréal","Édouard-Montpetit","Outremont","Acadie","Parc","De Castelnau","Jean-Talon","Fabre","D'Iberville","Saint-Michel"]
+};
+// Normalize curly apostrophes and en/em dashes so name matching is robust.
+const normName = s => s.replace(/[’‘`]/g, "'").replace(/[–—]/g, '-');
+const LINE_LOOKUP = (() => {
+  const m = {};
+  for (const [line, names] of Object.entries(METRO_LINES))
+    for (const n of names) { const k = normName(n); (m[k] = m[k] || []).push(line); }
+  return m;
+})();
+function linesFor(name, system) {
+  if (system === 'REM') return ['REM'];
+  return (LINE_LOOKUP[normName(name)] || []).slice();
+}
+
+// REM antenna (branch) each REM station sits on. Airport branch (A2: Marie-Curie -> YUL)
+// is not operational yet, so its stations aren't in play; Marie-Curie is grouped with the
+// West Island (Ouest) branch at the junction.
+const REM_BRANCHES = {
+  'Gare Centrale': 'Central', 'McGill': 'Central', 'Édouard-Montpetit': 'Central', 'Canora': 'Central', 'Ville-de-Mont-Royal': 'Central',
+  'Île-des-Soeurs': 'Rive-Sud', 'Panama': 'Rive-Sud', 'Du Quartier': 'Rive-Sud', 'Brossard': 'Rive-Sud',
+  'Montpellier': 'Deux-Montagnes', 'Du Ruisseau': 'Deux-Montagnes', 'Bois-Franc': 'Deux-Montagnes', 'Pierrefonds-Roxboro': 'Deux-Montagnes', 'Île-Bigras': 'Deux-Montagnes', 'Sainte-Dorothée': 'Deux-Montagnes',
+  'Côte-de-Liesse': 'Ouest', 'Marie-Curie': 'Ouest', 'Des Sources': 'Ouest', 'Fairview-Pointe-Claire': 'Ouest', 'Kirkland': 'Ouest', "Anse-à-l'Orme": 'Ouest'
+};
+const BRANCH_LOOKUP = Object.fromEntries(Object.entries(REM_BRANCHES).map(([n, b]) => [normName(n), b]));
+function branchFor(name, system) {
+  if (system !== 'REM') return undefined;
+  return BRANCH_LOOKUP[normName(name)];
+}
+
+// Stations missing from the Overpass results (e.g. tagged public_transport=station without
+// station=subway) are supplemented here so the generated data stays complete.
+const MANUAL_STATIONS = [
+  { name: 'Lionel-Groulx', system: 'Metro', zone: 'A', lat: 45.4824, lon: -73.5804 }
+];
+
 // Overpass query for Montreal Metro and REM stations
 // Bounding box covering Greater Montreal area (Laval, Longueuil, Brossard, etc.)
 const BBOX = '45.35,-74.05,45.75,-73.40';
@@ -147,6 +189,8 @@ async function main() {
 
   // Filter to Zone A and B only, exclude YUL airport station
   const filtered = stations.filter(s => (s.zone === 'A' || s.zone === 'B') && !s.name.includes('YUL'));
+  // Supplement any stations Overpass missed.
+  for (const m of MANUAL_STATIONS) if (!filtered.some(s => s.name === m.name && s.system === m.system)) filtered.push(m);
   console.log(`Zone A: ${filtered.filter(s => s.zone === 'A').length} stations`);
   console.log(`Zone B: ${filtered.filter(s => s.zone === 'B').length} stations`);
   console.log(`Metro: ${filtered.filter(s => s.system === 'Metro').length}`);
@@ -167,6 +211,8 @@ async function main() {
         name: station.name,
         system: station.system,
         zone: station.zone,
+        lines: linesFor(station.name, station.system),
+        branch: branchFor(station.name, station.system),
         featureType: 'station'
       }
     });
@@ -179,6 +225,8 @@ async function main() {
         name: station.name,
         system: station.system,
         zone: station.zone,
+        lines: linesFor(station.name, station.system),
+        branch: branchFor(station.name, station.system),
         featureType: 'hidingZone',
         radiusMiles: 0.25
       }
