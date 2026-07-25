@@ -223,6 +223,20 @@
       return Math.sign((p2[0] - p1[0]) * (p[1] - p1[1]) - (p2[1] - p1[1]) * (p[0] - p1[0]));
     }
 
+    // Returns [midpoint, midpoint+perp] defining the perpendicular bisector
+    function perpBisector(p1, p2) {
+      const mx = (p1[0] + p2[0]) / 2, my = (p1[1] + p2[1]) / 2;
+      const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+      // Perpendicular direction: [-dy, dx]
+      return [[mx, my], [mx - dy, my + dx]];
+    }
+
+    // Get the effective line endpoints for a line filter (original or perpendicular bisector)
+    function effectiveLine(filter) {
+      if (filter.perpendicular) return perpBisector(filter.points[0], filter.points[1]);
+      return [filter.points[0], filter.points[1]];
+    }
+
     function pointInPolygon(coords, polygon) {
       return turf.booleanPointInPolygon(turf.point(coords), polygon);
     }
@@ -231,7 +245,8 @@
       if (!filter.enabled) return true;
       if (filter.type === 'line') {
         if (!filter.points || filter.points.length < 2) return true;
-        const side = lineSide(filter.points[0], filter.points[1], coords);
+        const [lp1, lp2] = effectiveLine(filter);
+        const side = lineSide(lp1, lp2, coords);
         if (side === 0) return true;
         return filter.mode === 'include' ? side === filter.side : side !== filter.side;
       }
@@ -255,7 +270,7 @@
     }
 
     function buildLineHalfPlane(filter) {
-      const [p1, p2] = filter.points;
+      const [p1, p2] = effectiveLine(filter);
       const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
       if (dx === 0 && dy === 0) return null;
       const sign = (filter.mode === 'include') === (filter.side === 1) ? 1 : -1;
@@ -544,18 +559,19 @@
         if (!filter.enabled) continue;
 
         if (filter.type === 'line' && filter.points?.length === 2) {
-          const [p1, p2] = filter.points;
-          const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+          const [lp1, lp2] = effectiveLine(filter);
+          const dx = lp2[0] - lp1[0], dy = lp2[1] - lp1[1];
           if (dx !== 0 || dy !== 0) {
             const steps = 200, scale = 10, coords = [];
             for (let i = -steps; i <= steps; i++) {
               const t = i / steps * scale;
-              coords.push([p1[0] + dx * t, p1[1] + dy * t]);
+              coords.push([lp1[0] + dx * t, lp1[1] + dy * t]);
             }
             lines.push(turf.lineString(coords));
           }
-          points.push(turf.point(p1));
-          points.push(turf.point(p2));
+          // Always show the original clicked points
+          points.push(turf.point(filter.points[0]));
+          points.push(turf.point(filter.points[1]));
         }
 
         if (filter.type === 'radius' && filter.center) {
@@ -593,7 +609,7 @@
           id: Math.random().toString(36).slice(2, 10),
           type, label: '', enabled: true, mode: 'include'
         };
-        if (type === 'line') { filter.points = null; filter.side = 1; }
+        if (type === 'line') { filter.points = null; filter.side = 1; filter.perpendicular = false; }
         else if (type === 'radius') { filter.center = null; filter.radius = 5; }
         else if (type === 'polygon') { filter.vertices = null; }
 
@@ -644,7 +660,11 @@
               <select data-field="side" data-id="${filter.id}">
                 <option value="1" ${filter.side === 1 ? 'selected' : ''}>Side A</option>
                 <option value="-1" ${filter.side === -1 ? 'selected' : ''}>Side B</option>
-              </select>` : ''}
+              </select>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#aaa;cursor:pointer">
+                <input type="checkbox" data-field="perpendicular" data-id="${filter.id}" ${filter.perpendicular ? 'checked' : ''}
+                  style="width:18px;height:18px;cursor:pointer" /> Perp.
+              </label>` : ''}
             ${filter.type === 'radius' ? `
               <input type="number" min="0.1" step="0.5" value="${filter.radius}" data-field="radius" data-id="${filter.id}" />
               <span class="mi-label">mi</span>` : ''}
@@ -679,6 +699,7 @@
         else if (field === 'mode') { f.mode = el.value; }
         else if (field === 'side') { f.side = parseInt(el.value); }
         else if (field === 'radius') { f.radius = parseFloat(el.value) || 1; }
+        else if (field === 'perpendicular') { f.perpendicular = el.checked; }
         saveFilters(); applyFilters();
       };
     }
