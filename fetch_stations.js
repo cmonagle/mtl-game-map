@@ -9,6 +9,27 @@ const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 // 1/4 mile in meters
 const QUARTER_MILE_M = 402.336;
 
+// Metro line membership by station name. REM stations are assigned "REM" by system.
+// A station may belong to multiple lines (transfer stations, e.g. Berri-UQAM).
+const METRO_LINES = {
+  Green: ["Angrignon","Monk","Jolicoeur","Verdun","De l'Église","LaSalle","Charlevoix","Atwater","Guy-Concordia","Peel","McGill","Place-des-Arts","Saint-Laurent","Berri-UQAM","Beaudry","Papineau","Frontenac","Préfontaine","Joliette","Pie IX","Viau","Assomption","Cadillac","Langelier","Radisson","Honoré-Beaugrand"],
+  Orange: ["Côte-Vertu","Du Collège","De La Savane","Namur","Plamondon","Côte-Sainte-Catherine","Snowdon","Villa-Maria","Vendôme","Place Saint-Henri","Georges-Vanier","Lucien-L'Allier","Bonaventure","Square-Victoria-OACI","Place d'Armes","Champ-de-Mars","Berri-UQAM","Sherbrooke","Mont-Royal","Laurier","Rosemont","Beaubien","Jean-Talon","Jarry","Crémazie","Sauvé","Henri-Bourassa","Cartier","De la Concorde","Montmorency"],
+  Yellow: ["Berri-UQAM","Jean-Drapeau","Longueuil-Université-de-Sherbrooke"],
+  Blue: ["Snowdon","Côte-des-Neiges","Université-de-Montréal","Édouard-Montpetit","Outremont","Acadie","Parc","De Castelnau","Jean-Talon","Fabre","D'Iberville","Saint-Michel"]
+};
+// Normalize curly apostrophes and en/em dashes so name matching is robust.
+const normName = s => s.replace(/[’‘`]/g, "'").replace(/[–—]/g, '-');
+const LINE_LOOKUP = (() => {
+  const m = {};
+  for (const [line, names] of Object.entries(METRO_LINES))
+    for (const n of names) { const k = normName(n); (m[k] = m[k] || []).push(line); }
+  return m;
+})();
+function linesFor(name, system) {
+  if (system === 'REM') return ['REM'];
+  return (LINE_LOOKUP[normName(name)] || []).slice();
+}
+
 // Overpass query for Montreal Metro and REM stations
 // Bounding box covering Greater Montreal area (Laval, Longueuil, Brossard, etc.)
 const BBOX = '45.35,-74.05,45.75,-73.40';
@@ -167,6 +188,7 @@ async function main() {
         name: station.name,
         system: station.system,
         zone: station.zone,
+        lines: linesFor(station.name, station.system),
         featureType: 'station'
       }
     });
@@ -179,6 +201,7 @@ async function main() {
         name: station.name,
         system: station.system,
         zone: station.zone,
+        lines: linesFor(station.name, station.system),
         featureType: 'hidingZone',
         radiusMiles: 0.25
       }

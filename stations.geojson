@@ -14,7 +14,10 @@
         "name": "Guy-Concordia",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -291,7 +294,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -307,7 +313,10 @@
         "name": "Place-des-Arts",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -584,7 +593,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -600,7 +612,10 @@
         "name": "Saint-Laurent",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -877,7 +892,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -893,7 +911,10 @@
         "name": "Atwater",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -1170,7 +1191,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -1186,7 +1210,10 @@
         "name": "Joliette",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -1463,7 +1490,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -1479,7 +1509,10 @@
         "name": "Jolicoeur",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -1756,7 +1789,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -1772,7 +1808,10 @@
         "name": "Pie IX",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -2049,7 +2088,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -2065,7 +2107,10 @@
         "name": "Angrignon",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -2342,7 +2387,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -2358,7 +2406,10 @@
         "name": "Outremont",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -2635,7 +2686,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -2651,7 +2705,10 @@
         "name": "Kirkland",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -2928,7 +2985,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -2944,7 +3004,10 @@
         "name": "Lucien-L'Allier",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -3221,7 +3284,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -3237,7 +3303,10 @@
         "name": "Canora",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -3514,7 +3583,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -3530,7 +3602,10 @@
         "name": "Ville-de-Mont-Royal",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -3807,7 +3882,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -3823,7 +3901,10 @@
         "name": "Longueuil–Université-de-Sherbrooke",
         "system": "Metro",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Yellow"
+        ]
       }
     },
     {
@@ -4100,7 +4181,10 @@
         "system": "Metro",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Yellow"
+        ]
       }
     },
     {
@@ -4116,7 +4200,10 @@
         "name": "Côte-des-Neiges",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -4393,7 +4480,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -4409,7 +4499,12 @@
         "name": "Berri-UQAM",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green",
+          "Orange",
+          "Yellow"
+        ]
       }
     },
     {
@@ -4686,7 +4781,12 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green",
+          "Orange",
+          "Yellow"
+        ]
       }
     },
     {
@@ -4702,7 +4802,10 @@
         "name": "Jean-Drapeau",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Yellow"
+        ]
       }
     },
     {
@@ -4979,7 +5082,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Yellow"
+        ]
       }
     },
     {
@@ -4995,7 +5101,10 @@
         "name": "Villa-Maria",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -5272,7 +5381,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -5288,7 +5400,11 @@
         "name": "Snowdon",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange",
+          "Blue"
+        ]
       }
     },
     {
@@ -5565,7 +5681,11 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange",
+          "Blue"
+        ]
       }
     },
     {
@@ -5581,7 +5701,10 @@
         "name": "Viau",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -5858,7 +5981,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -5874,7 +6000,10 @@
         "name": "Monk",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -6151,7 +6280,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -6167,7 +6299,10 @@
         "name": "De l'Église",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -6444,7 +6579,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -6460,7 +6598,10 @@
         "name": "Charlevoix",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -6737,7 +6878,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -6753,7 +6897,10 @@
         "name": "Préfontaine",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -7030,7 +7177,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -7046,7 +7196,10 @@
         "name": "McGill",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -7323,7 +7476,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -7339,7 +7495,10 @@
         "name": "Cadillac",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -7616,7 +7775,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -7632,7 +7794,10 @@
         "name": "Honoré-Beaugrand",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -7909,7 +8074,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -7925,7 +8093,10 @@
         "name": "Saint-Michel",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -8202,7 +8373,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -8218,7 +8392,10 @@
         "name": "D’Iberville",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -8495,7 +8672,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -8511,7 +8691,10 @@
         "name": "Fabre",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -8788,7 +8971,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -8804,7 +8990,11 @@
         "name": "Jean-Talon",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange",
+          "Blue"
+        ]
       }
     },
     {
@@ -9081,7 +9271,11 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange",
+          "Blue"
+        ]
       }
     },
     {
@@ -9097,7 +9291,10 @@
         "name": "De Castelnau",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -9374,7 +9571,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -9390,7 +9590,10 @@
         "name": "Parc",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -9667,7 +9870,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -9683,7 +9889,10 @@
         "name": "Acadie",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -9960,7 +10169,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -9976,7 +10188,10 @@
         "name": "Édouard-Montpetit",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -10253,7 +10468,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -10269,7 +10487,10 @@
         "name": "Université-de-Montréal",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -10546,7 +10767,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Blue"
+        ]
       }
     },
     {
@@ -10562,7 +10786,10 @@
         "name": "Côte-Vertu",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -10839,7 +11066,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -10855,7 +11085,10 @@
         "name": "Du Collège",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -11132,7 +11365,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -11148,7 +11384,10 @@
         "name": "De La Savane",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -11425,7 +11664,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -11441,7 +11683,10 @@
         "name": "Namur",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -11718,7 +11963,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -11734,7 +11982,10 @@
         "name": "Plamondon",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -12011,7 +12262,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -12027,7 +12281,10 @@
         "name": "Côte-Sainte-Catherine",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -12304,7 +12561,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -12320,7 +12580,10 @@
         "name": "Vendôme",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -12597,7 +12860,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -12613,7 +12879,10 @@
         "name": "Place Saint-Henri",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -12890,7 +13159,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -12906,7 +13178,10 @@
         "name": "Georges-Vanier",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -13183,7 +13458,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -13199,7 +13477,10 @@
         "name": "Bonaventure",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -13476,7 +13757,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -13492,7 +13776,10 @@
         "name": "Square-Victoria-OACI",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -13769,7 +14056,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -13785,7 +14075,10 @@
         "name": "Place d’Armes",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -14062,7 +14355,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -14078,7 +14374,10 @@
         "name": "Champ-de-Mars",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -14355,7 +14654,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -14371,7 +14673,10 @@
         "name": "Sherbrooke",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -14648,7 +14953,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -14664,7 +14972,10 @@
         "name": "Mont-Royal",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -14941,7 +15252,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -14957,7 +15271,10 @@
         "name": "Laurier",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -15234,7 +15551,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -15250,7 +15570,10 @@
         "name": "Rosemont",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -15527,7 +15850,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -15543,7 +15869,10 @@
         "name": "Beaubien",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -15820,7 +16149,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -15836,7 +16168,10 @@
         "name": "Jarry",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -16113,7 +16448,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -16129,7 +16467,10 @@
         "name": "Crémazie",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -16406,7 +16747,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -16422,7 +16766,10 @@
         "name": "Sauvé",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -16699,7 +17046,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -16715,7 +17065,10 @@
         "name": "Henri-Bourassa",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -16992,7 +17345,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -17008,7 +17364,10 @@
         "name": "De la Concorde",
         "system": "Metro",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -17285,7 +17644,10 @@
         "system": "Metro",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -17301,7 +17663,10 @@
         "name": "Radisson",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -17578,7 +17943,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -17594,7 +17962,10 @@
         "name": "Langelier",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -17871,7 +18242,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -17887,7 +18261,10 @@
         "name": "Assomption",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -18164,7 +18541,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -18180,7 +18560,10 @@
         "name": "Frontenac",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -18457,7 +18840,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -18473,7 +18859,10 @@
         "name": "Papineau",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -18750,7 +19139,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -18766,7 +19158,10 @@
         "name": "Beaudry",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -19043,7 +19438,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -19059,7 +19457,10 @@
         "name": "Peel",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -19336,7 +19737,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -19352,7 +19756,10 @@
         "name": "LaSalle",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -19629,7 +20036,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -19645,7 +20055,10 @@
         "name": "Verdun",
         "system": "Metro",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -19922,7 +20335,10 @@
         "system": "Metro",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Green"
+        ]
       }
     },
     {
@@ -19938,7 +20354,10 @@
         "name": "Anse-à-l'Orme",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -20215,7 +20634,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -20231,7 +20653,10 @@
         "name": "Des Sources",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -20508,7 +20933,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -20524,7 +20952,10 @@
         "name": "Marie-Curie",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -20801,7 +21232,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -20817,7 +21251,10 @@
         "name": "Fairview-Pointe-Claire",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -21094,7 +21531,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -21110,7 +21550,10 @@
         "name": "Côte-de-Liesse",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -21387,7 +21830,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -21403,7 +21849,10 @@
         "name": "Île-des-Soeurs",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -21680,7 +22129,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -21696,7 +22148,10 @@
         "name": "Montmorency",
         "system": "Metro",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -21973,7 +22428,10 @@
         "system": "Metro",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -21989,7 +22447,10 @@
         "name": "Cartier",
         "system": "Metro",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -22266,7 +22727,10 @@
         "system": "Metro",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "Orange"
+        ]
       }
     },
     {
@@ -22282,7 +22746,10 @@
         "name": "Du Quartier",
         "system": "REM",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -22559,7 +23026,10 @@
         "system": "REM",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -22575,7 +23045,10 @@
         "name": "Brossard",
         "system": "REM",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -22852,7 +23325,10 @@
         "system": "REM",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -22868,7 +23344,10 @@
         "name": "Panama",
         "system": "REM",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -23145,7 +23624,10 @@
         "system": "REM",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -23161,7 +23643,10 @@
         "name": "McGill",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -23438,7 +23923,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -23454,7 +23942,10 @@
         "name": "Gare Centrale",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -23731,7 +24222,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -23747,7 +24241,10 @@
         "name": "Montpellier",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -24024,7 +24521,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -24040,7 +24540,10 @@
         "name": "Du Ruisseau",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -24317,7 +24820,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -24333,7 +24839,10 @@
         "name": "Bois-Franc",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -24610,7 +25119,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -24626,7 +25138,10 @@
         "name": "Pierrefonds-Roxboro",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -24903,7 +25418,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -24919,7 +25437,10 @@
         "name": "Île-Bigras",
         "system": "REM",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -25196,7 +25717,10 @@
         "system": "REM",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -25212,7 +25736,10 @@
         "name": "Sainte-Dorothée",
         "system": "REM",
         "zone": "B",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -25489,7 +26016,10 @@
         "system": "REM",
         "zone": "B",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -25505,7 +26035,10 @@
         "name": "Édouard-Montpetit",
         "system": "REM",
         "zone": "A",
-        "featureType": "station"
+        "featureType": "station",
+        "lines": [
+          "REM"
+        ]
       }
     },
     {
@@ -25782,7 +26315,10 @@
         "system": "REM",
         "zone": "A",
         "featureType": "hidingZone",
-        "radiusMiles": 0.25
+        "radiusMiles": 0.25,
+        "lines": [
+          "REM"
+        ]
       }
     }
   ]

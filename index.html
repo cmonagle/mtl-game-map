@@ -106,6 +106,23 @@
     .add-option:active, .menu-option:active { background: rgba(255,255,255,0.12); }
     .add-option:last-child, .menu-option:last-child { margin-bottom: 0; }
 
+    .menu-section-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+      color: #888; padding: 2px 2px 6px;
+    }
+    #line-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .line-chip {
+      flex: 1; min-width: 54px; padding: 9px 6px;
+      border: 1.5px solid var(--c); border-radius: 8px;
+      background: transparent; color: #fff;
+      font-family: inherit; font-size: 12px; cursor: pointer; text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .line-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex-shrink: 0; }
+    .line-chip.active { background: var(--c); color: #111; font-weight: 700; }
+    .line-chip.active .line-dot { background: #111; }
+
     #filter-list { padding: 0 12px 20px; }
     .filter-card {
       background: rgba(255,255,255,0.05);
@@ -274,6 +291,14 @@
       <button class="add-option" data-type="polygon">Polygon -- include/exclude area</button>
     </div>
     <div id="more-menu">
+      <div class="menu-section-label">Remove a whole line</div>
+      <div id="line-toggles">
+        <button class="line-chip" data-line="Green" style="--c:#008E4F"><span class="line-dot"></span>Green</button>
+        <button class="line-chip" data-line="Orange" style="--c:#EF8122"><span class="line-dot"></span>Orange</button>
+        <button class="line-chip" data-line="Yellow" style="--c:#F2C500"><span class="line-dot"></span>Yellow</button>
+        <button class="line-chip" data-line="Blue" style="--c:#0072BC"><span class="line-dot"></span>Blue</button>
+        <button class="line-chip" data-line="REM" style="--c:#7AC943"><span class="line-dot"></span>REM</button>
+      </div>
       <button class="menu-option" id="clear-btn" style="color:#f88">Clear all filters</button>
       <div id="clear-confirm" style="display:none">
         <div style="font-size:13px;color:#e0e0e0;padding:8px 4px 10px">Clear all filters and saved data on this device? This can be undone until you reload.</div>
@@ -1071,6 +1096,7 @@
 
     // --- Removed stations (manual exclusion) ---
     function updateExclInfo() {
+      updateLineChips();
       const el = document.getElementById('excl-info');
       if (!el) return;
       if (excluded.size) {
@@ -1089,6 +1115,38 @@
     }
     document.getElementById('excl-info').addEventListener('click', (e) => {
       if (e.target.id === 'excl-restore') clearExcluded();
+    });
+
+    // --- Remove a whole metro line ---
+    // Line membership comes from each station's `lines` property in the geojson.
+    // Removing a line just adds all its stations to the excluded set (and restoring
+    // removes them), so it composes with manual per-station removals and sharing.
+    function stationsOnLine(line) {
+      if (!stationData) return [];
+      return stationData.features
+        .filter(f => (f.properties.lines || []).includes(line))
+        .map(f => stationKey(f.properties));
+    }
+    function lineFullyRemoved(line) {
+      const keys = stationsOnLine(line);
+      return keys.length > 0 && keys.every(k => excluded.has(k));
+    }
+    function toggleLine(line) {
+      const keys = stationsOnLine(line);
+      if (!keys.length) return;
+      if (lineFullyRemoved(line)) keys.forEach(k => excluded.delete(k));
+      else keys.forEach(k => excluded.add(k));
+      saveExcluded();
+      applyFilters();
+    }
+    function updateLineChips() {
+      document.querySelectorAll('.line-chip').forEach(chip => {
+        chip.classList.toggle('active', lineFullyRemoved(chip.dataset.line));
+      });
+    }
+    document.getElementById('line-toggles').addEventListener('click', (e) => {
+      const chip = e.target.closest('.line-chip');
+      if (chip) toggleLine(chip.dataset.line);
     });
   </script>
 </body>
